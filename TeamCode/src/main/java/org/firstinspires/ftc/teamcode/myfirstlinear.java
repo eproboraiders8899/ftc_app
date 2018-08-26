@@ -58,6 +58,7 @@ public class myfirstlinear extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor LeftMotor = null;
     private DcMotor RightMotor = null;
+    static final double     FORWARD_SPEED = 0.6;
 
     @Override
     public void runOpMode() {
@@ -111,22 +112,18 @@ public class myfirstlinear extends LinearOpMode {
             telemetry.update();
 
 
-            Thread.sleep(10000);
-            leftPower = 1;
-            rightPower = 1;
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            LeftMotor.setPower(FORWARD_SPEED);
+            RightMotor.setPower(FORWARD_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 10.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            LeftMotor.setPower(0);
+            RightMotor.setPower(0);
+            telemetry.addData("Path", "Complete");
             telemetry.update();
-            LeftMotor.setPower(leftPower);
-            RightMotor.setPower(rightPower);
-            Thread.sleep(10000);
-            leftPower = 0;
-            rightPower = 0;
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-            telemetry.update();
-            LeftMotor.setPower(leftPower);
-            RightMotor.setPower(rightPower);
+            sleep(1000);
 
         }
     }
