@@ -129,7 +129,7 @@ public class myfirstlinear extends LinearOpMode {
                 LeftMotor.setPower(TURN_SPEED);
                 RightMotor.setPower(-TURN_SPEED);
                 runtime.reset();
-                while (opModeIsActive() && (runtime.seconds() < 0.3)) {
+                while (opModeIsActive() && (runtime.seconds() < 0.45)) {
                     telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
                     telemetry.update();
                 }
