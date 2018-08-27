@@ -59,6 +59,8 @@ public class myfirstlinear extends LinearOpMode {
     private DcMotor LeftMotor = null;
     private DcMotor RightMotor = null;
     static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
+    int SquareIteration = 0;
 
     @Override
     public void runOpMode() {
@@ -112,13 +114,29 @@ public class myfirstlinear extends LinearOpMode {
             telemetry.update();
 
 
-            LeftMotor.setPower(FORWARD_SPEED);
-            RightMotor.setPower(FORWARD_SPEED);
-            runtime.reset();
-            while (opModeIsActive() && (runtime.seconds() < 10.0)) {
-                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-                telemetry.update();
+            while (SquareIteration < 4) {
+
+                SquareIteration = SquareIteration + 1;
+
+                LeftMotor.setPower(FORWARD_SPEED);
+                RightMotor.setPower(FORWARD_SPEED);
+                runtime.reset();
+                while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                    telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                    telemetry.update();
+                }
+
+                LeftMotor.setPower(TURN_SPEED);
+                RightMotor.setPower(-TURN_SPEED);
+                runtime.reset();
+                while (opModeIsActive() && (runtime.seconds() < 0.3)) {
+                    telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+                    telemetry.update();
+                }
+
+
             }
+
             LeftMotor.setPower(0);
             RightMotor.setPower(0);
             telemetry.addData("Path", "Complete");
