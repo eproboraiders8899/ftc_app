@@ -85,7 +85,7 @@ public class mysecondlinear extends LinearOpMode{
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            speed = Range.clip(Math.abs(nspeed), 0.0, 1.0);
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftDrive.setPower(speed);
             robot.rightDrive.setPower(speed);
 
