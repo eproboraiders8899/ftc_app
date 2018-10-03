@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.Range;
 public class mysecondlinear extends LinearOpMode{
 
     // Create a new HardwarePushbot called "robot"
-    HardwarePushbot robot = new HardwarePushbot();
+    MyHardwarePushbot robot = new MyHardwarePushbot();
 
     public void runOpMode() {
 
