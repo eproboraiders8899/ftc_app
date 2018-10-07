@@ -46,27 +46,58 @@ public class iterativeController extends OpMode {
     @Override
     public void loop() {
 
+
+        double leftPower;
+        double rightPower;
+        double liftPower;
+
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
         // Setup a variable for each drive wheel to save power level for telemetry
-        double leftPower;
-        double rightPower;
 
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        // double drive = -gamepad1.left_stick_y;
+        // double turn  =  gamepad1.right_stick_x;
+        // leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+        // rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
+
+
+        // Throttle the power of the wheels if the difference between the request and current power is too big.
+        if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > 10) {
+            leftPower = leftPower + (gamepad1.left_stick_y - leftPower) / 2;
+        }
+        else {
+            leftPower  = gamepad1.left_stick_y;
+        }
+
+        if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > 10) {
+            rightPower = rightPower + (gamepad1.right_stick_y - rightPower) / 2;
+        }
+        else {
+            rightPower  = gamepad1.right_stick_y;
+        }
+
 
         // Send calculated power to wheels
         robot.leftDrive.setPower(leftPower);
         robot.leftFrontDrive.setPower(leftPower);
         robot.rightDrive.setPower(rightPower);
         robot.rightFrontDrive.setPower(rightPower);
+
+        // Set the power of the lift based on if the trigger and/or bumper on the left side of the second controller are pressed
+
+        if(gamepad2.left_bumper = 1) {
+            liftPower = .5;
+        }
+        else if (gamepad2.left_trigger = 1) {
+            liftPower = -.5;
+        }
+        else {
+            liftPower = 0;
+        }
+        robot.leftArm.setPower(liftPower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
