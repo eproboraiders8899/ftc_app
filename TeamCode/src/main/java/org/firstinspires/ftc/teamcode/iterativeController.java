@@ -15,8 +15,14 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
+    double leftPower = 0;
+    double rightPower = 0;
+    double liftPower = 0;
+
     @Override
     public void init() {
+
+
 
         robot.init(hardwareMap);
 
@@ -47,9 +53,6 @@ public class iterativeController extends OpMode {
     public void loop() {
 
 
-        double leftPower;
-        double rightPower;
-        double liftPower;
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
@@ -65,15 +68,20 @@ public class iterativeController extends OpMode {
 
 
         // Throttle the power of the wheels if the difference between the request and current power is too big.
-        if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > 10) {
-            leftPower = leftPower + (gamepad1.left_stick_y - leftPower) / 2;
+
+
+        // TODO: Improve throttling.
+
+        if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
+            leftPower = leftPower + (gamepad1.left_stick_y - leftPower) / 10;
         }
         else {
             leftPower  = gamepad1.left_stick_y;
         }
 
-        if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > 10) {
-            rightPower = rightPower + (gamepad1.right_stick_y - rightPower) / 2;
+        if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
+            rightPower = rightPower + (gamepad1.right_stick_y - rightPower) / 10;
+
         }
         else {
             rightPower  = gamepad1.right_stick_y;
@@ -82,16 +90,14 @@ public class iterativeController extends OpMode {
 
         // Send calculated power to wheels
         robot.leftDrive.setPower(leftPower);
-        robot.leftFrontDrive.setPower(leftPower);
         robot.rightDrive.setPower(rightPower);
-        robot.rightFrontDrive.setPower(rightPower);
 
         // Set the power of the lift based on if the trigger and/or bumper on the left side of the second controller are pressed
 
-        if(gamepad2.left_bumper = 1) {
+        if(gamepad2.left_bumper == true) {
             liftPower = .5;
         }
-        else if (gamepad2.left_trigger = 1) {
+        else if (gamepad2.left_trigger == 1) {
             liftPower = -.5;
         }
         else {
@@ -101,7 +107,7 @@ public class iterativeController extends OpMode {
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Motors", "Y'ALL WANT TO KNOW WHAT THE MOTOR SPEEDS ARE? HERE YE GO: \n Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
         telemetry.update();
 
     }

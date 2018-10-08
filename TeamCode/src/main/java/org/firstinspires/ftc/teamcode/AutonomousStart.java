@@ -1,6 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Range;
+import java.lang.Math;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 public class AutonomousStart extends LinearOpMode {
 
@@ -13,9 +19,9 @@ public class AutonomousStart extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Create a placeholder variable to be used in place of actual distances. THIS IS TEMPORARY!
-        public static final int PLACEHOLDER = 1;
+        int placeholder = 1;
 
-        telemetry.addData(">", "Robot Ready.");    //
+        telemetry.addData(">", "Robot Ready.");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -23,35 +29,35 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(PLACEHOLDER, PLACEHOLDER);
+        moveLift(placeholder, placeholder);
 
         // Drive away *slightly* from the lander.
 
-        drive(PLACEHOLDER, PLACEHOLDER);
+        drive(placeholder, placeholder);
 
         // Lower the lift back to the robot.
 
-        moveLift(PLACEHOLDER, PLACEHOLDER);
+        moveLift(placeholder, placeholder);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(PLACEHOLDER, PLACEHOLDER);
+        drive(placeholder, placeholder);
 
         // Turn 90 degrees.
 
-        headingDrive(PLACEHOLDER, PLACEHOLDER, PLACEHOLDER);
+        headingDrive(placeholder, placeholder, placeholder);
 
         // Drive forward to bypass the minerals on the field.
 
-        drive(PLACEHOLDER, PLACEHOLDER);
+        drive(placeholder, placeholder);
 
         //Turn 225 degrees.
 
-        headingDrive(PLACEHOLDER, PLACEHOLDER, PLACEHOLDER);
+        headingDrive(placeholder, placeholder, placeholder);
 
         // Drive forward into the base.
 
-        drive(PLACEHOLDER, PLACEHOLDER);
+        drive(placeholder, placeholder);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -70,37 +76,27 @@ public class AutonomousStart extends LinearOpMode {
 
             // Set the target positions for the robot, and set the robots to target mode.
             robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.leftFrontDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
-            robot.rightFrontDrive.setTargetPosition(newRightTarget);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftDrive.setPower(speed);
-            robot.leftFrontDrive.setPower(speed);
             robot.rightDrive.setPower(speed);
-            robot.rightFrontDrive.setPower(speed);
 
 
             while (opModeIsActive() &&
-                    robot.leftDrive.isBusy() && robot.leftFrontDrive.isBusy() && robot.rightDrive.isBusy() && robot.rightFrontDrive.isBusy()) {
+                    robot.leftDrive.isBusy() && robot.rightDrive.isBusy()) {
             }
 
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
-            robot.leftFrontDrive.setPower(0);
             robot.rightDrive.setPower(0);
-            robot.rightFrontDrive.setPower(0);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
@@ -123,7 +119,7 @@ public class AutonomousStart extends LinearOpMode {
         robot.leftArm.setPower(speed);
 
         while (opModeIsActive() &&
-                robot.leftArm.isBusy() {
+                robot.leftArm.isBusy()) {
         }
 
         robot.leftArm.setPower(0);
@@ -137,44 +133,34 @@ public class AutonomousStart extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Define the target for the robot to reach.
-            int leftMoveCounts = (int) (distance * 1);
-            int rightMoveCounts = (int) (distance * 1);
-            int newLeftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
-            int newRightTarget = robot.rightDrive.getCurrentPosition() + moveCounts;
+            int leftMoveCounts = (int) (leftDistance * 1);
+            int rightMoveCounts = (int) (rightDistance * 1);
+            int newLeftTarget = robot.leftDrive.getCurrentPosition() + leftMoveCounts;
+            int newRightTarget = robot.rightDrive.getCurrentPosition() + rightMoveCounts;
 
             // Set the target positions for the robot, and set the robots to target mode.
             robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.leftFrontDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
-            robot.rightFrontDrive.setTargetPosition(newRightTarget);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftDrive.setPower(speed);
-            robot.leftFrontDrive.setPower(speed);
             robot.rightDrive.setPower(speed);
-            robot.rightFrontDrive.setPower(speed);
 
 
             while (opModeIsActive() &&
-                    robot.leftDrive.isBusy() && robot.leftFrontDrive.isBusy() && robot.rightDrive.isBusy() && robot.rightFrontDrive.isBusy()) {
+                    robot.leftDrive.isBusy() && robot.rightDrive.isBusy()) {
             }
 
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
-            robot.leftFrontDrive.setPower(0);
             robot.rightDrive.setPower(0);
-            robot.rightFrontDrive.setPower(0);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
