@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import static java.lang.Thread.sleep;
+
 public class AutonomousStart extends LinearOpMode {
 
     //TODO: Refine headingDrive(), find actual values instead of placeholders, eventually
-
+    double liftPower = 0;
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
     public void runOpMode() {
@@ -29,15 +31,16 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(placeholder, placeholder);
+        moveLift(1, 19000);
+
+
 
         // Drive away *slightly* from the lander.
 
         drive(placeholder, placeholder);
 
-        // Lower the lift back to the robot.
+        // Lower the lift back to the robot. NVM
 
-        moveLift(placeholder, placeholder);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
@@ -103,20 +106,22 @@ public class AutonomousStart extends LinearOpMode {
 
     }
 
-    public void moveLift(double speed, double distance) {
+    public void moveLift(double speed, double duration) {
 
         // This is pretty much a carbon copy of the above drive() function, but used only for the lift on the robot.
 
         // Define the target for the lift to reach.
-        int moveCounts = (int) (distance * 1);
-        int LiftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
+       // int moveCounts = (int) (distance * 1);
+       // int LiftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
 
-        robot.leftArm.setTargetPosition(LiftTarget);
+       // robot.leftArm.setTargetPosition(LiftTarget);
 
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       // robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+        speed = Range.clip((speed), -1.0, 1.0);
         robot.leftArm.setPower(speed);
+
+        sleep(duration)
 
         while (opModeIsActive() &&
                 robot.leftArm.isBusy()) {
