@@ -7,13 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static java.lang.Thread.sleep;
 
 public class AutonomousStart extends LinearOpMode {
 
     //TODO: Refine headingDrive(), find actual values instead of placeholders, eventually
+
+    private ElapsedTime runtime = new ElapsedTime();
+
     double liftPower = 0;
+
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
     public void runOpMode() {
@@ -31,40 +36,37 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, 19000);
-
-
+        moveLift(1, 10);
 
         // Drive away *slightly* from the lander.
 
-        drive(placeholder, placeholder);
+        drive(1, 360);
 
         // Lower the lift back to the robot. NVM
 
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(placeholder, placeholder);
+        drive(1, 360);
 
         // Turn 90 degrees.
 
-        headingDrive(placeholder, placeholder, placeholder);
+        headingDrive(1, 360, -360);
 
         // Drive forward to bypass the minerals on the field.
 
-        drive(placeholder, placeholder);
+        drive(1, 1440);
 
-        //Turn 225 degrees.
+        // Turn 225 degrees.
 
-        headingDrive(placeholder, placeholder, placeholder);
+        headingDrive(1, 900, -900);
 
         // Drive forward into the base.
 
-        drive(placeholder, placeholder);
+        drive(1, 1215);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-
 
     }
 
@@ -91,8 +93,7 @@ public class AutonomousStart extends LinearOpMode {
 
 
             while (opModeIsActive() &&
-                    robot.leftDrive.isBusy() && robot.rightDrive.isBusy()) {
-            }
+                    robot.leftDrive.isBusy() && robot.rightDrive.isBusy()) {}
 
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
@@ -103,33 +104,20 @@ public class AutonomousStart extends LinearOpMode {
 
         }
 
-
     }
 
     public void moveLift(double speed, double duration) {
 
-        // This is pretty much a carbon copy of the above drive() function, but used only for the lift on the robot.
-
-        // Define the target for the lift to reach.
-       // int moveCounts = (int) (distance * 1);
-       // int LiftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
-
-       // robot.leftArm.setTargetPosition(LiftTarget);
-
-       // robot.leftArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // Runs the lift for a set time and at a set speed.
 
         speed = Range.clip((speed), -1.0, 1.0);
         robot.leftArm.setPower(speed);
 
-        sleep(duration)
+        runtime.reset();
 
-        while (opModeIsActive() &&
-                robot.leftArm.isBusy()) {
-        }
+        while (runtime.seconds() < duration) {}
 
         robot.leftArm.setPower(0);
-
-        robot.leftArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -169,8 +157,6 @@ public class AutonomousStart extends LinearOpMode {
 
         }
 
-
     }
 
 }
-

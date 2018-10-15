@@ -88,7 +88,7 @@ public class MyHardwarePushbot
 
         // Set all motors to zero power
         leftDrive.setPower(0);
-        rightDrive.setPower(0);;
+        rightDrive.setPower(0);
         leftArm.setPower(0);
 
         // Set all motors to run without encoders.

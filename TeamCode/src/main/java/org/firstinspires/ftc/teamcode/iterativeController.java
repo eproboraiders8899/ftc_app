@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import static java.lang.Double.toString;
+
 @TeleOp(name="iterativeController", group="Iterative Opmode")
 
 public class iterativeController extends OpMode {
@@ -17,7 +19,17 @@ public class iterativeController extends OpMode {
 
     double leftPower = 0;
     double rightPower = 0;
-    double liftPower = 0;
+    double liftPower = .5;
+    boolean leftPressed = false;
+    boolean rightPressed = false;
+    boolean aPressed = false;
+    boolean bPressed = false;
+    boolean tank = true;
+    boolean halfSpeed = false;
+    String trueMode;
+    String speed;
+    double leftDistance;
+    double rightDistance;
 
     @Override
     public void init() {
@@ -52,62 +64,146 @@ public class iterativeController extends OpMode {
     @Override
     public void loop() {
 
-
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        // Setup a variable for each drive wheel to save power level for telemetry
-
-        // double drive = -gamepad1.left_stick_y;
-        // double turn  =  gamepad1.right_stick_x;
-        // leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        // rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-
-        // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-
 
         // Throttle the power of the wheels if the difference between the request and current power is too big.
 
+        // Toggle "tank" driving mode with the A button.
 
-        // TODO: Improve throttling.
-
-        if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
-            leftPower = leftPower + (gamepad1.left_stick_y - leftPower) / 10;
-        }
-        else {
-            leftPower  = gamepad1.left_stick_y;
-        }
-
-        if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
-            rightPower = rightPower + (gamepad1.right_stick_y - rightPower) / 10;
-
-        }
-        else {
-            rightPower  = gamepad1.right_stick_y;
+        if(gamepad1.a == true && aPressed == false){
+            if(tank == true){
+                tank = false;
+            }
+            else{
+                tank = true;
+            }
+            aPressed = true;
         }
 
+        if(gamepad1.a == false) {
+            aPressed = false;
+        }
+
+        // Toggle "half speed" mode with the B button.
+
+        if(gamepad1.b == true && bPressed == false){
+            if(halfSpeed == true){
+                halfSpeed = false;
+            }
+            else{
+                halfSpeed = true;
+            }
+            bPressed = true;
+        }
+
+        if(gamepad1.b == false) {
+            bPressed = false;
+        }
 
         // Send calculated power to wheels
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
+        if(tank == true){
 
-        // Set the power of the lift based on if the trigger and/or bumper on the left side of the second controller are pressed
+            // "Tank" driving mode
 
-        if(gamepad2.left_bumper == true) {
-            liftPower = .5;
-        }
-        else if (gamepad2.left_trigger == 1) {
-            liftPower = -.5;
+            // Throttle the power of the wheels if the difference between the request and current power is too big.
+
+            if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
+                leftPower = (leftPower + gamepad1.left_stick_y) / 2;
+            }
+            else {
+                leftPower  = gamepad1.left_stick_y;
+            }
+
+            if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
+                rightPower = (rightPower + gamepad1.right_stick_y) / 2;
+
+            }
+            else {
+                rightPower  = gamepad1.right_stick_y;
+            }
+
         }
         else {
-            liftPower = 0;
-        }
-        robot.leftArm.setPower(liftPower);
 
-        // Show the elapsed game time and wheel power.
+            // "POV" driving mode
+
+            leftPower = Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0);
+            rightPower = Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0);
+        }
+
+        // If half speed mode is on, divide the speed the motor is set to by 2.
+        if(halfSpeed = true){
+            robot.leftDrive.setPower(leftPower / 2);
+            robot.rightDrive.setPower(rightPower / 2);
+        }
+        else{
+            robot.leftDrive.setPower(leftPower);
+            robot.rightDrive.setPower(rightPower);
+        }
+
+
+
+        // When a button on the dpad is pressed ONCE, increment the speed of the lift a small amount.
+
+        if(gamepad2.dpad_left == true && leftPressed == false) {
+            leftPressed = true;
+            liftPower += .05;
+        }
+
+        if(true != gamepad2.dpad_left){
+            leftPressed = false;
+        }
+
+        if(gamepad2.dpad_right == true && rightPressed == false) {
+            rightPressed = true;
+            liftPower -= .05;
+        }
+
+        if(true != gamepad2.dpad_right){
+            rightPressed = false;
+        }
+
+        // Check if the lift speed is <= 1 and >= 0.
+
+        liftPower = Range.clip(liftPower, 0, 1.0);
+
+        // Run the lift based on the designated speed.
+
+
+        if(gamepad2.dpad_up == true) {
+            robot.leftArm.setPower(liftPower);
+        }
+        else if (gamepad2.dpad_down == true) {
+            robot.leftArm.setPower(-liftPower);
+        }
+
+        if (gamepad2.dpad_up != true && gamepad2.dpad_down != true){
+            robot.leftArm.setPower(0);
+        }
+
+        if(tank == true){
+            trueMode = "Tank";
+        }
+        else{
+            trueMode = "POV";
+        }
+        if(halfSpeed == true){
+            speed = "Half";
+        }
+        else{
+            speed = "Full";
+        }
+
+        // Show the elapsed game time, wheel power, wheel distance, and motor mode.
+        leftDistance = robot.leftDrive.getCurrentPosition();
+        rightDistance = robot.rightDrive.getCurrentPosition();
+
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "Y'ALL WANT TO KNOW WHAT THE MOTOR SPEEDS ARE? HERE YE GO: \n Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
+        telemetry.addData("Motor Speeds:", "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
+        telemetry.addData("Motor Distances:", "Left: (%.2f) Right: (%.2f)", leftDistance, rightDistance);
+        telemetry.addData("Toggles:", "Mode: " + trueMode);
+        telemetry.addData("Toggles:", "Mode: " + speed);
+
         telemetry.update();
 
     }
