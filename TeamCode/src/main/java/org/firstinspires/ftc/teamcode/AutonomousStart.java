@@ -11,9 +11,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static java.lang.Thread.sleep;
 
+@Autonomous(name = "AutonomousStart", group = "Autonomous")
+// @Disabled
 public class AutonomousStart extends LinearOpMode {
-
-    //TODO: Refine headingDrive(), find actual values instead of placeholders, eventually
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -36,18 +36,21 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, 10);
+        moveLift(1, 2);
 
         // Drive away *slightly* from the lander.
 
-        drive(1, 360);
+        turn(.5, .5);
 
-        // Lower the lift back to the robot. NVM
+        drive(.5, -180);
+
+        turn(-.5, .5);
+
 
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(1, 360);
+        /** drive(1, 360);
 
         // Turn 90 degrees.
 
@@ -63,7 +66,7 @@ public class AutonomousStart extends LinearOpMode {
 
         // Drive forward into the base.
 
-        drive(1, 1215);
+        drive(1, 1215); **/
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -154,6 +157,29 @@ public class AutonomousStart extends LinearOpMode {
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        }
+
+    }
+
+    public void turn(double speed, double duration) {
+
+        if (opModeIsActive()) {
+
+            // Set the speed of the robot to the "speed" variable in the function.
+            speed = Range.clip(speed, -1.0, 1.0);
+            robot.leftDrive.setPower(speed);
+            robot.rightDrive.setPower(-speed);
+
+
+            runtime.reset();
+
+            while (runtime.seconds() < duration) {}
+
+            // Set the robot's power to 0.
+            robot.leftDrive.setPower(0);
+            robot.rightDrive.setPower(0);
+
 
         }
 

@@ -30,6 +30,8 @@ public class iterativeController extends OpMode {
     String speed;
     double leftDistance;
     double rightDistance;
+    double leftHalf;
+    double rightHalf;
 
     @Override
     public void init() {
@@ -71,12 +73,7 @@ public class iterativeController extends OpMode {
         // Toggle "tank" driving mode with the A button.
 
         if(gamepad1.a == true && aPressed == false){
-            if(tank == true){
-                tank = false;
-            }
-            else{
-                tank = true;
-            }
+            tank = !tank;
             aPressed = true;
         }
 
@@ -87,12 +84,7 @@ public class iterativeController extends OpMode {
         // Toggle "half speed" mode with the B button.
 
         if(gamepad1.b == true && bPressed == false){
-            if(halfSpeed == true){
-                halfSpeed = false;
-            }
-            else{
-                halfSpeed = true;
-            }
+            halfSpeed = !halfSpeed;
             bPressed = true;
         }
 
@@ -100,7 +92,6 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
-        // Send calculated power to wheels
         if(tank == true){
 
             // "Tank" driving mode
@@ -127,14 +118,16 @@ public class iterativeController extends OpMode {
 
             // "POV" driving mode
 
-            leftPower = Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0);
-            rightPower = Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0);
+            leftPower = -(Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0));
+            rightPower = -(Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0));
         }
 
         // If half speed mode is on, divide the speed the motor is set to by 2.
-        if(halfSpeed = true){
-            robot.leftDrive.setPower(leftPower / 2);
-            robot.rightDrive.setPower(rightPower / 2);
+        if(halfSpeed == true){
+            leftHalf = leftPower / 2;
+            rightHalf = rightPower / 2;
+            robot.leftDrive.setPower(leftHalf);
+            robot.rightDrive.setPower(rightHalf);
         }
         else{
             robot.leftDrive.setPower(leftPower);
@@ -147,7 +140,7 @@ public class iterativeController extends OpMode {
 
         if(gamepad2.dpad_left == true && leftPressed == false) {
             leftPressed = true;
-            liftPower += .05;
+            liftPower -= .05;
         }
 
         if(true != gamepad2.dpad_left){
@@ -156,7 +149,7 @@ public class iterativeController extends OpMode {
 
         if(gamepad2.dpad_right == true && rightPressed == false) {
             rightPressed = true;
-            liftPower -= .05;
+            liftPower += .05;
         }
 
         if(true != gamepad2.dpad_right){
@@ -202,7 +195,7 @@ public class iterativeController extends OpMode {
         telemetry.addData("Motor Speeds:", "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
         telemetry.addData("Motor Distances:", "Left: (%.2f) Right: (%.2f)", leftDistance, rightDistance);
         telemetry.addData("Toggles:", "Mode: " + trueMode);
-        telemetry.addData("Toggles:", "Mode: " + speed);
+        telemetry.addData("Toggles:", "Speed: " + speed);
 
         telemetry.update();
 
