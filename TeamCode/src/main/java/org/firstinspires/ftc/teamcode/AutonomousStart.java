@@ -36,15 +36,15 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, 2);
+        moveLift(1, 3.35);
 
         // Drive away *slightly* from the lander.
 
-        turn(.5, .5);
+        turn(-.5, .5);
 
         drive(.5, -180);
 
-        turn(-.5, .5);
+        turn(.5, .5);
 
 
 
