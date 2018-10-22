@@ -23,7 +23,7 @@ public class AutonomousStart extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 4);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
@@ -44,7 +44,7 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, 3.35);
+        moveLift(1, 3.4);
 
         // Drive away *slightly* from the lander.
 
@@ -52,30 +52,35 @@ public class AutonomousStart extends LinearOpMode {
 
         drive(.5, -180);
 
-        turn(.5, .5);
+        turn(-.5, 1.5);
 
 
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
         drive(1, 360);
-         encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+         encoderDrive(DRIVE_SPEED,  -8.5,  -8.5, 2.0);  // S1: Forward 12 Inches with 5 Sec timeout
 
 
         // Turn 90 degrees.
-
+        encoderDrive(DRIVE_SPEED,  7,  -7, 2.0);  // S1: turn 90 left with 5 Sec timeout
 
 
         // Drive forward to bypass the minerals on the field.
-
+        encoderDrive(DRIVE_SPEED,  -15,  -15  , 2.0);  // S1: Forward 12 Inches with 5 Sec timeout
 
         // Turn 225 degrees.
-
+        encoderDrive(DRIVE_SPEED,  -7,  7, 2.0);  // S1: Forward 12 Inches with 5 Sec timeout
 
 
         // Drive forward into the base.
+        encoderDrive(DRIVE_SPEED,  -10,  -10, 2.0);  // S1: Forward 24 Inches with 5 Sec timeout
 
 
+        encoderDrive(DRIVE_SPEED,  -3,  4, 2.0);  // S1: Forward 24 Inches with 5 Sec timeout
+
+
+        encoderDrive(DRIVE_SPEED,  -15,  -15, 2.0);  // S1: Forward 24 Inches with 5 Sec timeout
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -249,4 +254,6 @@ public class AutonomousStart extends LinearOpMode {
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
+    }
 }
+
