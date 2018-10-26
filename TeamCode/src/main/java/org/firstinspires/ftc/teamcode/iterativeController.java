@@ -17,52 +17,48 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    double leftPower = 0;
-    double rightPower = 0;
-    double liftPower = .5;
-    boolean leftPressed = false;
+    double  leftPower    = 0;
+    double  rightPower   = 0;
+    double  liftPower    = .5;
+    boolean leftPressed  = false;
     boolean rightPressed = false;
-    boolean aPressed = false;
-    boolean bPressed = false;
-    boolean tank = true;
-    boolean halfSpeed = false;
-    String trueMode;
-    String speed;
-    double leftDistance;
-    double rightDistance;
-    double leftHalf;
-    double rightHalf;
+    boolean aPressed     = false;
+    boolean bPressed     = false;
+    boolean tank         = true;
+    boolean halfSpeed    = false;
+    String  trueMode;
+    String  speed;
+    double  leftDistance;
+    double  rightDistance;
+    double  leftHalf;
+    double  rightHalf;
 
     @Override
     public void init() {
 
-
-
         robot.init(hardwareMap);
+
+        robot.leftClaw.setPosition(1);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+    // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+
     @Override
     public void init_loop() {
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
+    // Code to run ONCE when the driver hits PLAY
+
     @Override
     public void start() {
         runtime.reset();
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
-     */
+    // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
 
@@ -102,7 +98,7 @@ public class iterativeController extends OpMode {
                 leftPower = (leftPower + gamepad1.left_stick_y) / 2;
             }
             else {
-                leftPower  = gamepad1.left_stick_y;
+                leftPower = gamepad1.left_stick_y;
             }
 
             if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
@@ -110,7 +106,7 @@ public class iterativeController extends OpMode {
 
             }
             else {
-                rightPower  = gamepad1.right_stick_y;
+                rightPower = gamepad1.right_stick_y;
             }
 
         }
@@ -118,13 +114,13 @@ public class iterativeController extends OpMode {
 
             // "POV" driving mode
 
-            leftPower = -(Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0));
+            leftPower  = -(Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0));
             rightPower = -(Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0));
         }
 
         // If half speed mode is on, divide the speed the motor is set to by 2.
         if(halfSpeed == true){
-            leftHalf = leftPower / 2;
+            leftHalf  = leftPower  / 2;
             rightHalf = rightPower / 2;
             robot.leftDrive.setPower(leftHalf);
             robot.rightDrive.setPower(rightHalf);
@@ -162,7 +158,6 @@ public class iterativeController extends OpMode {
 
         // Run the lift based on the designated speed.
 
-
         if(gamepad2.dpad_up == true) {
             robot.leftArm.setPower(liftPower);
         }
@@ -188,7 +183,7 @@ public class iterativeController extends OpMode {
         }
 
         // Show the elapsed game time, wheel power, wheel distance, and motor mode.
-        leftDistance = robot.leftDrive.getCurrentPosition();
+        leftDistance  = robot.leftDrive.getCurrentPosition();
         rightDistance = robot.rightDrive.getCurrentPosition();
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -201,9 +196,8 @@ public class iterativeController extends OpMode {
 
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+    // Code to run ONCE after the driver hits STOP
+
     @Override
     public void stop() {
 

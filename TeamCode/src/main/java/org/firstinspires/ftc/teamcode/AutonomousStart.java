@@ -224,7 +224,7 @@ public class AutonomousStart extends LinearOpMode {
 
         drive(.5, -180);
 
-        turn(-.5, 1.5);
+        turn(-.5, 1.25);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
@@ -236,7 +236,7 @@ public class AutonomousStart extends LinearOpMode {
 
         runtime.reset();
 
-        //Deposit the team marker into the team base.
+        // Deposit the team marker into the team base.
 
         robot.leftClaw.setPosition(.5);
 
