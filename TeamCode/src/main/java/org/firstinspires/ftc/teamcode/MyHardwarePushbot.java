@@ -59,7 +59,6 @@ public class MyHardwarePushbot
     public DcMotor linearLift = null;
     public Servo   leftClaw   = null;
 
-    public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
@@ -97,7 +96,6 @@ public class MyHardwarePushbot
 
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
-        leftClaw.setPosition(MID_SERVO);
 
     }
  }
