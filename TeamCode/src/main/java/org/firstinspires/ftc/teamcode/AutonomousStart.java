@@ -37,26 +37,32 @@ public class AutonomousStart extends LinearOpMode {
         if (opModeIsActive()) {
             robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+           // robot.liftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+           // robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             // Define the target for the robot to reach.
             int moveCounts = (int) (distance * 1);
             int newLeftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
             int newRightTarget = robot.rightDrive.getCurrentPosition() + moveCounts;
+            //int newLiftTarget = robot.liftDrive.getCurrentPosition() + moveCounts;
 
             // Set the target positions for the robot, and set the robots to target mode.
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
+           // robot.liftDrive.setTargetPosition(newLiftTarget);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           // robot.liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             robot.leftDrive.setPower(speed);
             robot.rightDrive.setPower(speed);
+            //robot.LiftDrive.setPower(speed);
 
             while (opModeIsActive() &&
                     robot.leftDrive.isBusy() && robot.rightDrive.isBusy()) {}
@@ -64,9 +70,11 @@ public class AutonomousStart extends LinearOpMode {
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
             robot.rightDrive.setPower(0);
+            //robot.liftDrive.setPower(0);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
@@ -94,15 +102,19 @@ public class AutonomousStart extends LinearOpMode {
             // Define the target for the robot to reach.
             int leftMoveCounts  = (int) (leftDistance * 1);
             int rightMoveCounts = (int) (rightDistance * 1);
+            //int liftMoveCounts = (int) (liftDistance * 1);
             int newLeftTarget   = robot.leftDrive.getCurrentPosition()  + leftMoveCounts;
             int newRightTarget  = robot.rightDrive.getCurrentPosition() + rightMoveCounts;
+            //int newLiftTarget  = robot.liftDrive.getCurrentPosition() + rightMoveCounts;
 
             // Set the target positions for the robot, and set the robots to target mode.
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
+           // robot.liftDrive.setTargetPosition(newLiftTarget);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           // robot.liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
@@ -117,9 +129,11 @@ public class AutonomousStart extends LinearOpMode {
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
             robot.rightDrive.setPower(0);
+           // robot.liftDrive.setPower(0);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
@@ -133,6 +147,7 @@ public class AutonomousStart extends LinearOpMode {
             speed = Range.clip(speed, -1.0, 1.0);
             robot.leftDrive.setPower(speed);
             robot.rightDrive.setPower(-speed);
+           // robot.liftDrive.setPower(-speed);
 
 
             runtime.reset();
@@ -142,6 +157,7 @@ public class AutonomousStart extends LinearOpMode {
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
             robot.rightDrive.setPower(0);
+            //robot.liftDrive.setPower(0);
 
 
         }
@@ -152,6 +168,7 @@ public class AutonomousStart extends LinearOpMode {
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
+        //int newLiftTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -159,17 +176,21 @@ public class AutonomousStart extends LinearOpMode {
             // Determine new target position, and pass to motor controller
             newLeftTarget  = robot.leftDrive.getCurrentPosition()  + (int) (leftInches * COUNTS_PER_INCH);
             newRightTarget = robot.rightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+           // newLiftTarget = robot.liftDrive.getCurrentPosition() + (int) (liftInches * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
+            //robot.liftDrive.setTargetPosition(newLiftTarget);
 
             // Turn On RUN_TO_POSITION
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+           // robot.liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             robot.leftDrive.setPower(Math.abs(speed));
             robot.rightDrive.setPower(Math.abs(speed));
+            //robot.liftDrive.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -186,16 +207,19 @@ public class AutonomousStart extends LinearOpMode {
                 telemetry.addData("Path2", "Running at %7d :%7d",
                         robot.leftDrive.getCurrentPosition(),
                         robot.rightDrive.getCurrentPosition());
+                       // robot.liftDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             // Stop all motion;
             robot.leftDrive.setPower(0);
             robot.rightDrive.setPower(0);
+            //robot.liftDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
     }
@@ -224,7 +248,7 @@ public class AutonomousStart extends LinearOpMode {
 
         drive(.5, -180);
 
-        turn(-.5, 1.25);
+        turn(-.5, 1.2);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
