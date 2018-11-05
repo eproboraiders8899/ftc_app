@@ -17,15 +17,17 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    double  leftPower    = 0;
-    double  rightPower   = 0;
-    double  liftPower    = .5;
-    boolean leftPressed  = false;
-    boolean rightPressed = false;
-    boolean aPressed     = false;
-    boolean bPressed     = false;
-    boolean tank         = true;
-    boolean halfSpeed    = false;
+    double  leftPower       = 0;
+    double  rightPower      = 0;
+    double  liftPower       = .5;
+    boolean leftPressed     = false;
+    boolean rightPressed    = false;
+    boolean aPressed        = false;
+    boolean bPressed        = false;
+    boolean collectorToggle = false;
+    boolean collectorButton = false;
+    boolean tank            = true;
+    boolean halfSpeed       = false;
     String  trueMode;
     String  speed;
     double  leftDistance;
@@ -180,6 +182,32 @@ public class iterativeController extends OpMode {
         }
         else{
             speed = "Full";
+        }
+
+        // Toggle the position of the "mineralCollector" servo when the "A" button on the 2nd controller is pressed.
+
+        if(gamepad2.a == true && collectorButton == false){
+            collectorToggle = !collectorToggle;
+            collectorButton = true;
+        }
+
+        if(gamepad2.a == false) {
+            collectorButton = false;
+        }
+
+        /*
+        if(collectorToggle == true) {
+            robot.mineralCollector.setPosition(45);
+        }
+        else {
+            robot.mineralCollector.setPosition(0);
+        }
+        */
+
+        if (robot.digitalTouch.getState() == false) {
+        telemetry.addData("Digital Touch", "Is Pressed");
+        } else if (robot.digitalTouch.getState() == true)  {
+            telemetry.addData("Digital Touch", "Isn't Pressed");
         }
 
         // Show the elapsed game time, wheel power, wheel distance, and motor mode.
