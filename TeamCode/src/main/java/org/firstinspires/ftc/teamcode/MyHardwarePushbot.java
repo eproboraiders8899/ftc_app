@@ -29,11 +29,21 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
+import java.util.Locale;
 /**
  * This is NOT an opmode.
  *
@@ -53,11 +63,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class MyHardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor leftDrive  = null;
-    public DcMotor rightDrive = null;
-    public DcMotor leftArm    = null;
-    public DcMotor linearLift = null;
-    public Servo   leftClaw   = null;
+    public DcMotor leftDrive        = null;
+    public DcMotor rightDrive       = null;
+    public DcMotor leftArm          = null;
+    public DcMotor linearLift       = null;
+
+    public Servo   leftClaw         = null;
+    public Servo   limitSwitch      = null;
+
+    public Servo   mineralCollector = null;
+    public Servo   mineralClaw      = null;
+    public Servo   leftLinear       = null;
+    public Servo   rightLinear      = null;
+
+
+    /*
+    public ColorSensor colorSensor = null;
+    public DistanceSensor distanceSensor = null;
+    */
+
+    public DigitalChannel digitalTouch = null;  // Hardware Device Object
 
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -79,6 +104,16 @@ public class MyHardwarePushbot
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftArm    = hwMap.get(DcMotor.class, "left_arm");
         linearLift = hwMap.get(DcMotor.class, "linear_lift");
+
+
+        /*
+        colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
+        distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        */
+
+        digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+
         leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
@@ -86,6 +121,7 @@ public class MyHardwarePushbot
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         leftArm.setPower(0);
+
         linearLift.setPower(0);
 
         // Set all motors to run without encoders.
@@ -96,6 +132,13 @@ public class MyHardwarePushbot
 
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
+        limitSwitch = hwMap.get(Servo.class, "limit_servo");
+
+
+        mineralCollector = hwMap.get(Servo.class, "mineral_collector");
+        mineralClaw = hwMap.get(Servo.class, "mineral_claw");
+        leftLinear = hwMap.get(Servo.class, "left_linear");
+        rightLinear = hwMap.get(Servo.class, "right_linear");
 
     }
  }
