@@ -67,6 +67,7 @@ public class MyHardwarePushbot
     public DcMotor rightDrive       = null;
     public DcMotor leftArm          = null;
     public DcMotor linearLift       = null;
+    public DcMotor linearWind       = null;
 
     public Servo   leftClaw         = null;
     public Servo   limitSwitch      = null;
@@ -104,6 +105,8 @@ public class MyHardwarePushbot
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
         leftArm    = hwMap.get(DcMotor.class, "left_arm");
         linearLift = hwMap.get(DcMotor.class, "linear_lift");
+        linearWind = hwMap.get(DcMotor.class, "linear_wind");
+
 
 
         /*
@@ -123,6 +126,7 @@ public class MyHardwarePushbot
         leftArm.setPower(0);
 
         linearLift.setPower(0);
+        linearWind.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
