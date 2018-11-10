@@ -8,8 +8,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import static java.lang.Thread.sleep;
+
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
+
 
 // @Disabled
 public class AutonomousStart extends LinearOpMode {
@@ -30,7 +41,9 @@ public class AutonomousStart extends LinearOpMode {
     static final double DRIVE_SPEED              = 0.6;
     static final double TURN_SPEED               = 0.5;
 
+
     MyHardwarePushbot robot = new MyHardwarePushbot();
+
 
     public void drive(double speed, double distance) {
 
@@ -86,6 +99,10 @@ public class AutonomousStart extends LinearOpMode {
 
         speed = Range.clip((speed), -1.0, 1.0);
         robot.leftArm.setPower(speed);
+
+        runtime.reset();
+
+        while (robot.digitalTouch.getState() == true) {}
 
         runtime.reset();
 
@@ -240,7 +257,21 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, 3.4);
+        if (robot.digitalTouch.getState() == true) {
+            telemetry.addData("Digital Touch", "Is Not Pressed");
+            robot.leftArm.setPower(DRIVE_SPEED);
+        } else {
+            telemetry.addData("Digital Touch", "Is Pressed");
+            robot.leftArm.setPower(0);
+            robot.limitSwitch.setPosition(0);
+
+        }
+
+        telemetry.update();
+
+        moveLift(1, 0.25);
+
+        robot.limitSwitch.setPosition(1);
 
         // Drive away *slightly* from the lander.
 
@@ -269,4 +300,35 @@ public class AutonomousStart extends LinearOpMode {
         robot.leftClaw.setPosition(1);
 
     }
+
+    /*
+    public float[] senseColor() {
+
+        // Return the color sensor value in HSV form.
+
+        float[] hsvValues = {0, 0, 0};
+
+        Color.RGBToHSV((int) (robot.colorSensor.red() * 255),
+                (int) (robot.colorSensor.green() * 255),
+                (int) (robot.colorSensor.blue() * 255),
+                hsvValues);
+
+        return hsvValues;
+    }
+    */
+
+    /*
+    public boolean compareColors(colorA, colorB, tolerance) {
+
+        // Compare 2 colors(preferably, one of which being senseColor()), and return whether they are the same within a "tolerance" value in percent.
+
+        if(Math.abs(colorA[0] / 3.6 - colorB[0] / 3.6) <= tolerance && colorA[1] * 100 - colorB[1] * 100) <= tolerance && colorA[2] * 100 - colorB[2] * 100) <= tolerance) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    */
+
 }

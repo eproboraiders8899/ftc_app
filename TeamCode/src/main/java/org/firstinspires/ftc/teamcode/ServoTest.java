@@ -39,8 +39,6 @@ public class ServoTest extends LinearOpMode {
 
         while (runtime.seconds() < 6.0) {}
 
-
-
         telemetry.addData(">", "Path Complete.");
         telemetry.update();
     }
