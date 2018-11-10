@@ -19,21 +19,37 @@ public class iterativeController extends OpMode {
 
     double  leftPower       = 0;
     double  rightPower      = 0;
+
     double  liftPower       = .5;
+
     boolean leftPressed     = false;
     boolean rightPressed    = false;
+
     boolean aPressed        = false;
     boolean bPressed        = false;
-    boolean collectorToggle = false;
-    boolean collectorButton = false;
+
+    // boolean collectorToggle = false;
+    // boolean collectorButton = false;
+
     boolean tank            = true;
+
     boolean halfSpeed       = false;
+
+    boolean mineralLift     = false;
+    boolean mineralButton   = false;
+
+    boolean linearLift     = false;
+    boolean linearButton   = false;
+
     String  trueMode;
     String  speed;
+
     double  leftDistance;
     double  rightDistance;
+
     double  leftHalf;
     double  rightHalf;
+    double  linearSpeed;
 
     @Override
     public void init() {
@@ -41,6 +57,16 @@ public class iterativeController extends OpMode {
         robot.init(hardwareMap);
 
         robot.leftClaw.setPosition(1);
+
+        /*
+
+        robot.leftLinear.setPosition(.5);
+        robot.rightLinear.setPosition(.5);
+
+        robot.mineralClaw.setPosition(.5);
+        robot.mineralCollector.setPosition(.5);
+
+        */
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -132,8 +158,6 @@ public class iterativeController extends OpMode {
             robot.rightDrive.setPower(rightPower);
         }
 
-
-
         // When a button on the dpad is pressed ONCE, increment the speed of the lift a small amount.
 
         if(gamepad2.dpad_left == true && leftPressed == false) {
@@ -183,9 +207,24 @@ public class iterativeController extends OpMode {
         else{
             speed = "Full";
         }
+        /*
 
-        // Toggle the position of the "mineralCollector" servo when the "A" button on the 2nd controller is pressed.
+        robot.mineralCollector.setPosition((gamepad2.left_stick_y / 2) + .5);
 
+        linearSpeed = (gamepad2.right_stick_y / 2) + .5;
+
+        robot.leftLinear.setPosition(linearSpeed);
+        robot.rightLinear.setPosition(1 - linearSpeed);
+
+        if(gamepad2.left_bumper == true) {
+            robot.mineralClaw.setPosition(1);
+        }
+        else {
+            robot.mineralClaw.setPosition(0);
+        }
+        */
+
+        /*
         if(gamepad2.a == true && collectorButton == false){
             collectorToggle = !collectorToggle;
             collectorButton = true;
@@ -194,6 +233,50 @@ public class iterativeController extends OpMode {
         if(gamepad2.a == false) {
             collectorButton = false;
         }
+        */
+
+        // Toggle which part of the mineral collector is being controlled based on the right trigger button of the second controller.
+
+        /*
+        if(gamepad2.right_stick_button == true && mineralButton == false){
+            mineralLift = !mineralLift;
+            mineralButton = true;
+        }
+
+        if(gamepad2.right_stick_button == false) {
+            mineralButton = false;
+        }
+
+        if(mineralLift == true) {
+            robot.mineralCollector.setPosition((gamepad2.right_stick_y / 2) + .5);
+        }
+        else {
+            robot.mineralClaw.setPosition((gamepad2.right_stick_y / 2) + .5);
+
+        }
+
+        // Toggle which part of the linear lift is being controlled based on the left trigger button of the second controller.
+
+        if(gamepad2.left_stick_button == true && linearButton == false){
+            linearLift = !linearLift;
+            linearButton = true;
+        }
+
+        if(gamepad2.left_stick_button == false) {
+            mineralButton = false;
+        }
+
+        if(linearLift == true) {
+            robot.linearLift.setPower(gamepad2.left_stick_y);
+            robot.linearWind.setPower(gamepad2.left_stick_y);
+        }
+        else {
+            robot.linearLift.setPower(0);
+            robot.linearWind.setPower(0);
+            robot.leftLinear.setPosition((gamepad2.left_stick_y / 2) + .5);
+            robot.leftLinear.setPosition(-(gamepad2.left_stick_y / 2) + .5);
+        }
+        */
 
         /*
         if(collectorToggle == true) {
@@ -204,11 +287,13 @@ public class iterativeController extends OpMode {
         }
         */
 
+        /*
         if (robot.digitalTouch.getState() == false) {
         telemetry.addData("Digital Touch", "Is Pressed");
         } else if (robot.digitalTouch.getState() == true)  {
             telemetry.addData("Digital Touch", "Isn't Pressed");
         }
+        */
 
         // Show the elapsed game time, wheel power, wheel distance, and motor mode.
         leftDistance  = robot.leftDrive.getCurrentPosition();
@@ -216,10 +301,9 @@ public class iterativeController extends OpMode {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motor Speeds:", "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
-        telemetry.addData("Motor Distances:", "Left: (%.2f) Right: (%.2f)", leftDistance, rightDistance);
-        telemetry.addData("Toggles:", "Mode: " + trueMode);
+/*        telemetry.addData("Toggles:", "Mode: " + trueMode);
         telemetry.addData("Toggles:", "Speed: " + speed);
-
+*/
         telemetry.update();
 
     }
