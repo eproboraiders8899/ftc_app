@@ -283,7 +283,7 @@ public class AutonomousStart extends LinearOpMode {
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(1, 360);
+        drive(-1, 360);
 
     }
 
