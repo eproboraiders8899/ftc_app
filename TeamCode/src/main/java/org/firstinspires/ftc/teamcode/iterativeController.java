@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Double.toString;
+import static java.lang.Double.valueOf;
 
 @TeleOp(name="iterativeController", group="Iterative Opmode")
 
@@ -17,31 +18,32 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    double  leftPower       = 0;
-    double  rightPower      = 0;
+    double  leftPower          = 0;
+    double  rightPower         = 0;
 
-    double  liftPower       = .5;
+    double  liftPower          = .5;
 
-    boolean leftPressed     = false;
-    boolean rightPressed    = false;
+    boolean leftPressed        = false;
+    boolean rightPressed       = false;
 
-    boolean aPressed        = false;
-    boolean bPressed        = false;
+    // boolean aPressed        = false;
+    boolean bPressed           = false;
 
     // boolean collectorToggle = false;
     // boolean collectorButton = false;
 
-    boolean tank            = true;
+    // boolean tank            = true;
 
-    boolean halfSpeed       = false;
+    boolean halfSpeed          = false;
 
-    boolean mineralLift     = false;
-    boolean mineralButton   = false;
+    boolean mineralLift        = false;
+    boolean mineralButton      = false;
 
-    boolean linearLift     = false;
-    boolean linearButton   = false;
+    boolean linearLift         = false;
+    boolean linearButton       = false;
 
     String  trueMode;
+
     String  speed;
 
     double  leftDistance;
@@ -58,14 +60,11 @@ public class iterativeController extends OpMode {
 
         robot.leftClaw.setPosition(1);
 
-        /*
-
         robot.leftLinear.setPosition(.5);
         robot.rightLinear.setPosition(.5);
 
         robot.mineralClaw.setPosition(.5);
         robot.mineralCollector.setPosition(.5);
-
         */
 
         telemetry.addData("Status", "Initialized");
@@ -91,11 +90,10 @@ public class iterativeController extends OpMode {
     public void loop() {
 
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-
         // Throttle the power of the wheels if the difference between the request and current power is too big.
-
         // Toggle "tank" driving mode with the A button.
 
+        /*
         if(gamepad1.a == true && aPressed == false){
             tank = !tank;
             aPressed = true;
@@ -104,6 +102,7 @@ public class iterativeController extends OpMode {
         if(gamepad1.a == false) {
             aPressed = false;
         }
+        */
 
         // Toggle "half speed" mode with the B button.
 
@@ -116,6 +115,26 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
+        // "Tank" driving mode
+
+        // Throttle the power of the wheels if the difference between the request and current power is too big.
+
+        if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
+            leftPower = (leftPower + gamepad1.left_stick_y) / 2;
+        }
+        else {
+            leftPower = gamepad1.left_stick_y;
+        }
+
+        if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
+            rightPower = (rightPower + gamepad1.right_stick_y) / 2;
+
+        }
+        else {
+            rightPower = gamepad1.right_stick_y;
+        }
+
+        /*
         if(tank == true){
 
             // "Tank" driving mode
@@ -131,12 +150,10 @@ public class iterativeController extends OpMode {
 
             if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
                 rightPower = (rightPower + gamepad1.right_stick_y) / 2;
-
             }
             else {
                 rightPower = gamepad1.right_stick_y;
             }
-
         }
         else {
 
@@ -145,8 +162,10 @@ public class iterativeController extends OpMode {
             leftPower  = -(Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0));
             rightPower = -(Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0));
         }
+        */
 
         // If half speed mode is on, divide the speed the motor is set to by 2.
+
         if(halfSpeed == true){
             leftHalf  = leftPower  / 2;
             rightHalf = rightPower / 2;
@@ -195,20 +214,23 @@ public class iterativeController extends OpMode {
             robot.leftArm.setPower(0);
         }
 
+        /*
         if(tank == true){
             trueMode = "Tank";
         }
         else{
             trueMode = "POV";
         }
+        */
+
         if(halfSpeed == true){
             speed = "Half";
         }
         else{
             speed = "Full";
         }
-        /*
 
+        /*
         robot.mineralCollector.setPosition((gamepad2.left_stick_y / 2) + .5);
 
         linearSpeed = (gamepad2.right_stick_y / 2) + .5;
@@ -222,9 +244,7 @@ public class iterativeController extends OpMode {
         else {
             robot.mineralClaw.setPosition(0);
         }
-        */
 
-        /*
         if(gamepad2.a == true && collectorButton == false){
             collectorToggle = !collectorToggle;
             collectorButton = true;
@@ -252,7 +272,6 @@ public class iterativeController extends OpMode {
         }
         else {
             robot.mineralClaw.setPosition((gamepad2.right_stick_y / 2) + .5);
-
         }
 
         // Toggle which part of the linear lift is being controlled based on the left trigger button of the second controller.
@@ -276,21 +295,18 @@ public class iterativeController extends OpMode {
             robot.leftLinear.setPosition((gamepad2.left_stick_y / 2) + .5);
             robot.leftLinear.setPosition(-(gamepad2.left_stick_y / 2) + .5);
         }
-        */
 
-        /*
         if(collectorToggle == true) {
             robot.mineralCollector.setPosition(45);
         }
         else {
             robot.mineralCollector.setPosition(0);
         }
-        */
 
-        /*
         if (robot.digitalTouch.getState() == false) {
         telemetry.addData("Digital Touch", "Is Pressed");
-        } else if (robot.digitalTouch.getState() == true)  {
+        }
+        else if (robot.digitalTouch.getState() == true) {
             telemetry.addData("Digital Touch", "Isn't Pressed");
         }
         */
@@ -301,18 +317,18 @@ public class iterativeController extends OpMode {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motor Speeds:", "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
-/*        telemetry.addData("Toggles:", "Mode: " + trueMode);
-        telemetry.addData("Toggles:", "Speed: " + speed);
-*/
-        telemetry.update();
 
+        /*
+        telemetry.addData("Toggles:", "Mode: " + trueMode);
+        telemetry.addData("Toggles:", "Speed: " + speed);
+        */
+
+        telemetry.update();
     }
 
     // Code to run ONCE after the driver hits STOP
 
     @Override
     public void stop() {
-
     }
-
 }
