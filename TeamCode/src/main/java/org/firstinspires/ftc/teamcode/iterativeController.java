@@ -60,16 +60,8 @@ public class iterativeController extends OpMode {
 
         robot.leftClaw.setPosition(1);
 
-        robot.leftLinear.setPosition(.5);
-        robot.rightLinear.setPosition(.5);
-
-        robot.mineralClaw.setPosition(.5);
-        robot.mineralCollector.setPosition(.5);
-        */
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
     }
 
     // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY

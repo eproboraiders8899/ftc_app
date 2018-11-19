@@ -31,12 +31,12 @@ import android.view.View;
 public class CraterStart extends AutonomousStart {
 
     public void runOpMode() {
-        initialize()
+        initialize();
 
-        dismount()
+        dismount();
 
 
-        depositMarker()
+        depositMarker();
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

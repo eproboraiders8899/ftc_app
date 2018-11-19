@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import java.lang.Math;
+import java.util.List;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -56,6 +57,8 @@ public class AutonomousStart extends LinearOpMode {
     private VuforiaLocalizer vuforia;
 
     private TFObjectDetector tfod;
+
+    String goldPosition = null;
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
@@ -316,23 +319,28 @@ public class AutonomousStart extends LinearOpMode {
     }
 
     public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+
+        // Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
+
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
 
     public void initTfod() {
+
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
@@ -340,14 +348,67 @@ public class AutonomousStart extends LinearOpMode {
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+
             initTfod();
-        } else {
+        }
+        else {
+
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
     }
 
+    public void getGoldPosition() {
+        if (tfod != null) {
 
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+            if (updatedRecognitions != null) {
+
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                telemetry.update();
+
+                if (updatedRecognitions.size() == 3) {
+
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+
+                    for (Recognition recognition : updatedRecognitions) {
+
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+
+                            goldMineralX = (int) recognition.getLeft();
+                        }
+                        else if (silverMineral1X == -1) {
+
+                            silverMineral1X = (int) recognition.getLeft();
+                        }
+                        else {
+
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+
+                            goldPosition = "left";
+                        }
+                        else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+
+                            goldPosition = "right";
+                        }
+                        else {
+
+                            goldPosition = "center";
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /*
     public float[] senseColor() {
