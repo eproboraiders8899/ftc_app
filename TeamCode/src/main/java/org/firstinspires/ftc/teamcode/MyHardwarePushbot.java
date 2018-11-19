@@ -44,6 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import java.util.Locale;
+
 /**
  * This is NOT an opmode.
  *
@@ -113,11 +114,11 @@ public class MyHardwarePushbot
         linearLift = hwMap.get(DcMotor.class, "linear_lift");
         linearWind = hwMap.get(DcMotor.class, "linear_wind");
         */
+
         /*
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
         */
-
 
         digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
@@ -132,10 +133,8 @@ public class MyHardwarePushbot
         leftArm.setPower(0);
 
         /*
-
         linearLift.setPower(0);
         linearWind.setPower(0);
-
         */
 
         // Set all motors to run without encoders.

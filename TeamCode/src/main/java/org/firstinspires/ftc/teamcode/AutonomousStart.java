@@ -12,6 +12,12 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import static java.lang.Thread.sleep;
@@ -41,9 +47,17 @@ public class AutonomousStart extends LinearOpMode {
     static final double DRIVE_SPEED              = 0.6;
     static final double TURN_SPEED               = 0.5;
 
+    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+    private static final String VUFORIA_KEY = "AdTtd8D/////AAABmbAte/IPjExpuQ7N9ZZbhFUoIphG3O/GRS7D1JumDL5+8Z1ZqThpEqeUaCeFe5EsNKhwqIe4/AcxbyQ7Ya3JlG4qa7nSDD5G3Tp02egg6kzczLcCN14PwFKWNi/r1/TPjy8kvfjA5Ve9fSzOt7ZFb5eHDZ2bS47jJpDb0uHJl1UiXWYMGMtbSF3BUXTKCxGOu7D83FZQABJ0f8udnmc94zU+pQxWYfLQiRb7BDoax/hyzEXrPt3/uri4AL0F2O5TyE2SlIZBZPs6K2OcXL2GtsOwiT/jQDr7msaJoH7YqGi+uT+VZSTAvURf4SJ0TGc6Sk5513jsr6bLZCk1KPE1aYB2Hi9H0OXHnSju0r6V7M/1";
+
+    private VuforiaLocalizer vuforia;
+
+    private TFObjectDetector tfod;
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
-
 
     public void drive(double speed, double distance) {
 
@@ -88,9 +102,7 @@ public class AutonomousStart extends LinearOpMode {
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         }
-
     }
 
     public void moveLift(double speed, double duration) {
@@ -109,7 +121,6 @@ public class AutonomousStart extends LinearOpMode {
         while (runtime.seconds() < duration) {}
 
         robot.leftArm.setPower(0);
-
     }
 
     public void headingDrive(double speed, double leftDistance, double rightDistance) {
@@ -127,11 +138,11 @@ public class AutonomousStart extends LinearOpMode {
             // Set the target positions for the robot, and set the robots to target mode.
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
-           // robot.liftDrive.setTargetPosition(newLiftTarget);
+            // robot.liftDrive.setTargetPosition(newLiftTarget);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-           // robot.liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // robot.liftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // Set the speed of the robot to the "speed" variable in the function.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
@@ -146,14 +157,12 @@ public class AutonomousStart extends LinearOpMode {
             // Set the robot's power to 0.
             robot.leftDrive.setPower(0);
             robot.rightDrive.setPower(0);
-           // robot.liftDrive.setPower(0);
+            // robot.liftDrive.setPower(0);
 
             robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+            // robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
     }
 
     public void turn(double speed, double duration) {
@@ -176,9 +185,7 @@ public class AutonomousStart extends LinearOpMode {
             robot.rightDrive.setPower(0);
             //robot.liftDrive.setPower(0);
 
-
         }
-
     }
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
@@ -238,19 +245,26 @@ public class AutonomousStart extends LinearOpMode {
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             //robot.liftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-
     }
+
     public void initialize() {
 
         robot.init(hardwareMap);
 
         robot.leftClaw.setPosition(1);
 
+        initObjectDetection();
+
         telemetry.addData(">", "Robot Ready.");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+        if (tfod != null) {
+            tfod.activate();
+        }
+
     }
 
     public void dismount() {
@@ -301,6 +315,40 @@ public class AutonomousStart extends LinearOpMode {
 
     }
 
+    public void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+    }
+
+    public void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+    public void initObjectDetection() {
+        initVuforia();
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
+    }
+
+
+
     /*
     public float[] senseColor() {
 
@@ -325,7 +373,7 @@ public class AutonomousStart extends LinearOpMode {
         if(Math.abs(colorA[0] / 3.6 - colorB[0] / 3.6) <= tolerance && colorA[1] * 100 - colorB[1] * 100) <= tolerance && colorA[2] * 100 - colorB[2] * 100) <= tolerance) {
             return true;
         }
-        else {
+        else{
             return false;
         }
     }
