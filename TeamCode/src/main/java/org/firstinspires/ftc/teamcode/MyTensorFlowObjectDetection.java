@@ -51,7 +51,7 @@ import java.util.List;
  * is explained below.
  */
 @TeleOp(name = "TensorFlow Object Detection", group = "Concept")
-@Disabled
+// @Disabled
 public class MyTensorFlowObjectDetection extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
@@ -108,32 +108,41 @@ public class MyTensorFlowObjectDetection extends LinearOpMode {
 
             while (opModeIsActive()) {
                 if (tfod != null) {
+
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
+
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      if (updatedRecognitions.size() == 3) {
+
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                      if (updatedRecognitions.size() == 2) {
+
                         int goldMineralX = -1;
-                        int silverMineral1X = -1;
-                        int silverMineral2X = -1;
+                        int silverMineralX = -1;
+
                         for (Recognition recognition : updatedRecognitions) {
-                          if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                          } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                          } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                          }
+
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+
+                                goldMineralX = (int) recognition.getLeft();
+                            }
+                            else if (silverMineralX == -1) {
+
+                                silverMineralX = (int) recognition.getLeft();
+                            }
                         }
-                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                          if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                          } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+
+                        if (goldMineralX == -1) {
                             telemetry.addData("Gold Mineral Position", "Right");
-                          } else {
+                        }
+                        else if (silverMineralX > goldMineralX) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                        }
+                        else {
                             telemetry.addData("Gold Mineral Position", "Center");
-                          }
                         }
                       }
                       telemetry.update();

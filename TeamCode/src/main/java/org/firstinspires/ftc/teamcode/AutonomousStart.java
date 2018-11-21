@@ -359,6 +359,7 @@ public class AutonomousStart extends LinearOpMode {
     }
 
     public void getGoldPosition() {
+
         if (tfod != null) {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
@@ -366,13 +367,11 @@ public class AutonomousStart extends LinearOpMode {
             if (updatedRecognitions != null) {
 
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
-                telemetry.update();
 
-                if (updatedRecognitions.size() == 3) {
+                if (updatedRecognitions.size() == 2) {
 
                     int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
+                    int silverMineralX = -1;
 
                     for (Recognition recognition : updatedRecognitions) {
 
@@ -380,32 +379,24 @@ public class AutonomousStart extends LinearOpMode {
 
                             goldMineralX = (int) recognition.getLeft();
                         }
-                        else if (silverMineral1X == -1) {
+                        else if (silverMineralX == -1) {
 
-                            silverMineral1X = (int) recognition.getLeft();
-                        }
-                        else {
-
-                            silverMineral2X = (int) recognition.getLeft();
+                            silverMineralX = (int) recognition.getLeft();
                         }
                     }
 
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-
-                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-
-                            goldPosition = "left";
-                        }
-                        else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-
-                            goldPosition = "right";
-                        }
-                        else {
-
-                            goldPosition = "center";
-                        }
+                    if (goldMineralX == -1) {
+                        goldPosition = "right";
+                    }
+                    else if (silverMineralX > goldMineralX) {
+                        goldPosition = "left";
+                    }
+                    else {
+                        goldPosition = "center";
                     }
                 }
+
+                telemetry.update();
             }
         }
     }
