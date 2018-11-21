@@ -60,12 +60,12 @@ public class iterativeController extends OpMode {
 
         robot.leftClaw.setPosition(1);
 
-        robot.leftLinear.setPosition(.5);
-        robot.rightLinear.setPosition(.5);
+       // robot.leftLinear.setPosition(.5);
+       // robot.rightLinear.setPosition(.5);
 
         robot.mineralClaw.setPosition(.5);
         robot.mineralCollector.setPosition(.5);
-        */
+
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -230,6 +230,9 @@ public class iterativeController extends OpMode {
             speed = "Full";
         }
 
+        robot.mineralCollector.setPosition((gamepad2.right_stick_y / 2) + .5);
+
+        robot.mineralClaw.setPosition((gamepad2.left_stick_x / 2) + .5);
 
         /*
         robot.mineralCollector.setPosition((gamepad2.left_stick_y / 2) + .5);

@@ -76,12 +76,12 @@ public class MyHardwarePushbot
     public Servo   leftClaw         = null;
     public Servo   limitSwitch      = null;
 
-    /*
+
     public Servo   mineralCollector = null;
     public Servo   mineralClaw      = null;
-    public Servo   leftLinear       = null;
-    public Servo   rightLinear      = null;
-    */
+    //public Servo   leftLinear       = null;
+    //public Servo   rightLinear      = null;
+
 
     /*
     public ColorSensor colorSensor = null;
@@ -147,11 +147,11 @@ public class MyHardwarePushbot
         leftClaw  = hwMap.get(Servo.class, "left_hand");
         limitSwitch = hwMap.get(Servo.class, "limit_servo");
 
-        /*
+
         mineralCollector = hwMap.get(Servo.class, "mineral_collector");
         mineralClaw = hwMap.get(Servo.class, "mineral_claw");
-        leftLinear = hwMap.get(Servo.class, "left_linear");
-        rightLinear = hwMap.get(Servo.class, "right_linear");
-        */
+       // leftLinear = hwMap.get(Servo.class, "left_linear");
+       // rightLinear = hwMap.get(Servo.class, "right_linear");
+
     }
  }
