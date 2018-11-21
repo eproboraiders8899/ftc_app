@@ -386,6 +386,7 @@ public class AutonomousStart extends LinearOpMode {
                     }
 
                     if (goldMineralX == -1) {
+                        
                         goldPosition = "right";
                     }
                     else if (silverMineralX > goldMineralX) {
