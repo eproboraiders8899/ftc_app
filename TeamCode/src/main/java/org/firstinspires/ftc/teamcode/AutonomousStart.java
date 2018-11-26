@@ -118,7 +118,7 @@ public class AutonomousStart extends LinearOpMode {
 
         runtime.reset();
 
-        while (runtime.seconds() < duration) {}
+        while (runtime.milliseconds() < duration *1000) {}
 
         robot.leftArm.setPower(0);
     }
@@ -271,33 +271,21 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        if (robot.digitalTouch.getState() == true) {
-            telemetry.addData("Digital Touch", "Is Not Pressed");
-            robot.leftArm.setPower(DRIVE_SPEED);
-        } else {
-            telemetry.addData("Digital Touch", "Is Pressed");
-            robot.leftArm.setPower(0);
-            robot.limitSwitch.setPosition(0);
-
-        }
-
-        telemetry.update();
-
-        moveLift(1, 0.25);
+        moveLift(1, .133);
 
         robot.limitSwitch.setPosition(1);
 
         // Drive away *slightly* from the lander.
 
-        turn(-.5, .5);
+        turn(-.5, 1);
 
-        drive(.5, -180);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
 
-        turn(-.5, 1.2);
+        turn(-.5, 1);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(-1, 360);
+        //drive(1, 360);
 
     }
 

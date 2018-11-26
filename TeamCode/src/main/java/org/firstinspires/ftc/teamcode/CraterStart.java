@@ -27,7 +27,7 @@ import android.graphics.Color;
 import android.view.View;
 
 
-
+@Autonomous(name = "CraterStart", group = "Autonomous")
 public class CraterStart extends AutonomousStart {
 
     public void runOpMode() {
