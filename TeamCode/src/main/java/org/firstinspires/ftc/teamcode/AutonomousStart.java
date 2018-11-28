@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import java.lang.Math;
+import java.util.List;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -47,6 +49,10 @@ public class AutonomousStart extends LinearOpMode {
     static final double DRIVE_SPEED              = 0.6;
     static final double TURN_SPEED               = 0.5;
 
+    static final int GOLD_CENTER = 0;
+    static final int GOLD_RIGHT = 1;
+    static final int GOLD_LEFT = 2;
+
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
@@ -56,6 +62,8 @@ public class AutonomousStart extends LinearOpMode {
     private VuforiaLocalizer vuforia;
 
     private TFObjectDetector tfod;
+
+    String goldPosition = null;
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
@@ -118,7 +126,7 @@ public class AutonomousStart extends LinearOpMode {
 
         runtime.reset();
 
-        while (runtime.milliseconds() < duration *1000) {}
+        while (runtime.seconds() < duration) {}
 
         robot.leftArm.setPower(0);
     }
@@ -271,21 +279,33 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        moveLift(1, .133);
+        if (robot.digitalTouch.getState() == true) {
+            telemetry.addData("Digital Touch", "Is Not Pressed");
+            robot.leftArm.setPower(DRIVE_SPEED);
+        } else {
+            telemetry.addData("Digital Touch", "Is Pressed");
+            robot.leftArm.setPower(0);
+            robot.limitSwitch.setPosition(0);
+
+        }
+
+        telemetry.update();
+
+        moveLift(1, 0.25);
 
         robot.limitSwitch.setPosition(1);
 
         // Drive away *slightly* from the lander.
 
-        turn(-.5, 1);
+        turn(-.5, .5);
 
-        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        drive(.5, -180);
 
-        turn(-.5, 1);
+        turn(-.5, 1.2);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        //drive(1, 360);
+        drive(-1, 360);
 
     }
 
@@ -304,23 +324,28 @@ public class AutonomousStart extends LinearOpMode {
     }
 
     public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+
+        // Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
+
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
     }
 
     public void initTfod() {
+
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
@@ -328,14 +353,64 @@ public class AutonomousStart extends LinearOpMode {
         initVuforia();
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+
             initTfod();
-        } else {
+        }
+        else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
     }
 
+    public int getGoldPosition() {
+        int goldLocation = GOLD_CENTER;
 
+        if (tfod != null) {
+
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+            if (updatedRecognitions != null) {
+
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                telemetry.update();
+
+                if (updatedRecognitions.size() == 2) {
+
+                    int goldMineralX = -1;
+                    int silverMineralX = -1;
+
+                    for (Recognition recognition : updatedRecognitions) {
+
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+
+                            goldMineralX = (int) recognition.getLeft();
+                        }
+                        else if (silverMineralX == -1) {
+
+                            silverMineralX = (int) recognition.getLeft();
+                        }
+                    }
+
+                    if (goldMineralX == -1) {
+                        goldLocation = GOLD_LEFT;
+                    }
+                    else if (silverMineralX > goldMineralX) {
+                        goldLocation = GOLD_CENTER;
+                    }
+                    else {
+                        goldLocation = GOLD_RIGHT;
+                    }
+                }
+
+
+            }
+        }
+        else {
+
+            telemetry.addData("Tensor Flow Failed", "Defaulting to trying center");
+        }
+        return goldLocation;
+    }
 
     /*
     public float[] senseColor() {
