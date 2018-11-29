@@ -33,8 +33,12 @@ public class CraterNoDetach extends AutonomousStart {
 
     public void runOpMode() {
 
+        /*
         initialize();
-
+        encoderDrive(-1, 4, 4, 2);
+        turn(-.5, .25);
+        sleep(500);
+        */
 
         // Runs when the gold mineral is in the center.
         encoderDrive(-1, 35, 35, 3);
@@ -51,7 +55,7 @@ public class CraterNoDetach extends AutonomousStart {
         encoderDrive(.5, 35, 35, 3);
         */
 
-        robot.mineralCollector.setPosition(0);
+        robot.mineralCollector.setPosition(1);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
