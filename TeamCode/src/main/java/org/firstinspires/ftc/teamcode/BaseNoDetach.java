@@ -28,35 +28,42 @@ import android.graphics.Color;
 import android.view.View;
 
 
-@TeleOp(name="Base Start- No Detach", group="Autonomous")
+@Autonomous(name="Base Start- No Detach", group="Autonomous")
 // @Disabled
 public class BaseNoDetach extends AutonomousStart {
 
     public void runOpMode() {
 
+
         initialize();
 
-        /*
-        // Runs when the gold mineral is in the center.
-        encoderDrive(.5, 56, 56, 3);
-        */
 
-        /*
-        // Runs when the gold mineral is on the right.
-        encoderDrive(.5, 27, 27, 3);
-        turn(-.5, 1);
-        encoderDrive(.5, 36, 36, 3);
-        */
+        if(seeingGold() == true) {
+            encoderDrive(.75, 80, 80, 3);
+        }
+        else {
+            encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);  // S1: turn to scan right mineral with 5 Sec timeout
 
-        /*
-        // Runs when the gold mineral is on the left.
-        encoderDrive(.5, 27, 27, 3);
-        turn(.5, 1);
-        encoderDrive(.5, 36, 36, 3);
-        */
+            if(seeingGold() == true) {
+
+                encoderDrive(1, 35, 35, 3);
+                encoderDrive(.75, 7, -7, 3);
+                encoderDrive(.75, 35, 35, 3);
+            }
+
+            else{
+
+                encoderDrive(DRIVE_SPEED,  8,  -8, 5.0);  // S1: turn to scan left mineral with 5 Sec timeout
+                encoderDrive(1, 35, 35, 3);
+                encoderDrive(.75, -10, 10, 3);
+                encoderDrive(.75, 39, 39, 3);
+            }
+        }
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
 
         depositMarker();
-
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
