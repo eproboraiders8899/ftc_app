@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import static java.lang.Double.toString;
 import static java.lang.Double.valueOf;
 
-@TeleOp(name="iterativeController", group="Iterative Opmode")
+@TeleOp(name="Iterative Controller", group="Iterative Opmode")
 
 public class iterativeController extends OpMode {
 
@@ -23,10 +23,12 @@ public class iterativeController extends OpMode {
 
     double  liftPower          = .5;
 
+    int     speedDirection     = 1;
+
     boolean leftPressed        = false;
     boolean rightPressed       = false;
 
-    // boolean aPressed        = false;
+    boolean aPressed           = false;
     boolean bPressed           = false;
 
     // boolean collectorToggle = false;
@@ -104,6 +106,17 @@ public class iterativeController extends OpMode {
         }
         */
 
+        // Toggle "reverse speed" mode with the B button.
+
+        if(gamepad1.a == true && aPressed == false){
+            speedDirection = speedDirection * -1;
+            aPressed = true;
+        }
+
+        if(gamepad1.a == false) {
+            aPressed = false;
+        }
+
         // Toggle "half speed" mode with the B button.
 
         if(gamepad1.b == true && bPressed == false){
@@ -173,8 +186,8 @@ public class iterativeController extends OpMode {
             robot.rightDrive.setPower(rightHalf);
         }
         else{
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
+            robot.leftDrive.setPower(leftPower * speedDirection);
+            robot.rightDrive.setPower(rightPower * speedDirection);
         }
 
         // When a button on the dpad is pressed ONCE, increment the speed of the lift a small amount.

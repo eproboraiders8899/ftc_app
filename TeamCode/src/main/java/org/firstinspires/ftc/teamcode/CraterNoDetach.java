@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -27,35 +28,34 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-@TeleOp(name="Crater Start- No Detach", group="Autonomous")
+@Autonomous(name="Crater Start- No Detach", group="Autonomous")
 // @Disabled
 public class CraterNoDetach extends AutonomousStart {
 
     public void runOpMode() {
 
-        /*
         initialize();
-        encoderDrive(-1, 4, 4, 2);
-        turn(-.5, .25);
-        sleep(500);
-        */
 
-        // Runs when the gold mineral is in the center.
-        encoderDrive(-1, 35, 35, 3);
 
-        /*
-        // Runs when the gold mineral is on the right.
-        turn(.5, 1);
-        encoderDrive(.5, 38, 38, 3);
-        */
+        if(seeingGold() == true) {
+            encoderDrive(-1, 35, 35, 3);
+        }
+        else {
+            encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);  // S1: turn to scan right mineral with 5 Sec timeout
 
-        /*
-        // Runs when the gold mineral is on the left.
-        turn(-.5, 1);
-        encoderDrive(.5, 35, 35, 3);
-        */
+            if(seeingGold() == true) {
 
-        robot.mineralCollector.setPosition(1);
+                encoderDrive(-1, 35, 35, 3);
+            }
+
+            else{
+
+                encoderDrive(DRIVE_SPEED,  8,  -8, 5.0);  // S1: turn to scan left mineral with 5 Sec timeout
+                encoderDrive(-1, 35, 35, 3); //run to push mineral and park on crater
+            }
+        }
+
+        CameraDevice.getInstance().setFlashTorchMode(false);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

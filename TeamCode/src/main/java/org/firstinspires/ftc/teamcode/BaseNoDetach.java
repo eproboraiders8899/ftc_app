@@ -12,6 +12,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.CameraDevice;
+
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -42,28 +44,33 @@ public class BaseNoDetach extends AutonomousStart {
             encoderDrive(.75, 80, 80, 3);
         }
         else {
-            encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);  // S1: turn to scan right mineral with 5 Sec timeout
+            encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);
 
             if(seeingGold() == true) {
 
                 encoderDrive(1, 35, 35, 3);
+
                 encoderDrive(.75, 7, -7, 3);
+
                 encoderDrive(.75, 35, 35, 3);
             }
 
             else{
 
-                encoderDrive(DRIVE_SPEED,  8,  -8, 5.0);  // S1: turn to scan left mineral with 5 Sec timeout
+                encoderDrive(DRIVE_SPEED,  8,  -8, 5.0);
+
                 encoderDrive(1, 35, 35, 3);
+
                 encoderDrive(.75, -10, 10, 3);
+
                 encoderDrive(.75, 39, 39, 3);
             }
         }
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
         depositMarker();
+
+        CameraDevice.getInstance().setFlashTorchMode(false);
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
 

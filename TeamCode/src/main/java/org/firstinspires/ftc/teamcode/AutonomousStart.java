@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -259,15 +260,17 @@ public class AutonomousStart extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        robot.leftClaw.setPosition(1);
-
         initObjectDetection();
+
+        robot.leftClaw.setPosition(1);
 
         telemetry.addData(">", "Robot Ready.");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
+
 
         if (tfod != null) {
             tfod.activate();
@@ -355,6 +358,8 @@ public class AutonomousStart extends LinearOpMode {
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 
             initTfod();
+
+            CameraDevice.getInstance().setFlashTorchMode(true);
         }
         else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
@@ -412,6 +417,62 @@ public class AutonomousStart extends LinearOpMode {
         return goldLocation;
     }
 
+    public boolean seeingGold() {
+        boolean isGold = false;
+
+        if (tfod != null) {
+
+            runtime.reset();
+
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            int recognitionSize = 0;
+            while( (runtime.seconds() < 5) && (recognitionSize == 0) ) {
+                updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    recognitionSize = updatedRecognitions.size();
+                }
+            }
+
+            if (updatedRecognitions != null) {
+
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                telemetry.update();
+
+                if (updatedRecognitions.size() >= 1) {
+
+                    telemetry.addData("Size = 1 ", "Hi Adam");
+                    telemetry.update();
+
+                    for (Recognition recognition : updatedRecognitions) {
+
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+
+                            telemetry.addData("Confidence", recognition.getConfidence());
+                            telemetry.addData("Height", recognition.getHeight());
+                            telemetry.update();
+
+
+                            isGold = true;
+                            telemetry.addData("The Mineral is Gold", isGold);
+                            telemetry.update();
+                        }
+                        else{
+
+                            isGold = false;
+                            telemetry.addData("The Mineral is Silver", isGold);
+                            telemetry.update();
+                        }
+                    }
+                }
+            }
+        }
+        else {
+
+            telemetry.addData("Tensor Flow Failed", "Defaulting to saying gold is not being seen");
+        }
+        return isGold;
+    }
+
     /*
     public float[] senseColor() {
 
@@ -441,5 +502,4 @@ public class AutonomousStart extends LinearOpMode {
         }
     }
     */
-
 }
