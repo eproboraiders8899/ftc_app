@@ -28,6 +28,7 @@ import android.view.View;
 
 
 @Autonomous(name = "CraterStart", group = "Autonomous")
+@Disabled
 public class CraterStart extends AutonomousStart {
 
     public void runOpMode() {

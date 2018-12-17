@@ -45,6 +45,8 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import java.util.Locale;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 /**
  * This is NOT an opmode.
  *
@@ -114,6 +116,7 @@ public class MyHardwarePushbot
 
         // linearLift = hwMap.get(DcMotor.class, "linear_lift");
         linearWind = hwMap.get(DcMotor.class, "linear_wind");
+
 
 
         /*

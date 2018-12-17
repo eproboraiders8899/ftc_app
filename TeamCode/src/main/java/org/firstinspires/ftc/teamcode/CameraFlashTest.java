@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 @TeleOp(name="Camera Flash Test", group="Iterative Opmode")
-// @Disabled
+@Disabled
 
 public class CameraFlashTest extends OpMode {
 

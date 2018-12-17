@@ -27,7 +27,7 @@ import android.graphics.Color;
 import android.view.View;
 
 @Autonomous(name = "BaseStart", group = "Autonomous")
-
+@Disabled
 public class BaseStart extends AutonomousStart {
 
     public void runOpMode() {

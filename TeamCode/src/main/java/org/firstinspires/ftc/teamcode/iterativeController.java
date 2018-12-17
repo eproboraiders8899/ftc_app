@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static java.lang.Double.toString;
 import static java.lang.Double.valueOf;
 
-@TeleOp(name="Iterative Controller", group="Iterative Opmode")
+@TeleOp(name="Robot (Iterative) Controller", group="Iterative Opmode")
 
 public class iterativeController extends OpMode {
 
@@ -59,6 +60,8 @@ public class iterativeController extends OpMode {
     public void init() {
 
         robot.init(hardwareMap);
+
+        robot.linearWind.setZeroPowerBehavior(BRAKE);
 
         robot.leftClaw.setPosition(1);
 

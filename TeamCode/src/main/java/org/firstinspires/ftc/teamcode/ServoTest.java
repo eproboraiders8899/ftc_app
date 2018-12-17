@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "ServoTest", group = "Autonomous")
-// @Disabled
+@Disabled
 
 public class ServoTest extends LinearOpMode {
 

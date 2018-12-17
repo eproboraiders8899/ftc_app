@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp(name="mysecondlinear", group="Linear Opmode")
-
+@Disabled
 public class mysecondlinear extends LinearOpMode{
 
     // Create a new HardwarePushbot called "robot"
