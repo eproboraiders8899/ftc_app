@@ -278,6 +278,19 @@ public class AutonomousStart extends LinearOpMode {
 
     }
 
+    public void initializeNoDetection() {
+
+        robot.init(hardwareMap);
+
+        robot.leftClaw.setPosition(1);
+
+        telemetry.addData(">", "Robot Ready.");
+        telemetry.update();
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+    }
+
     public void dismount() {
 
         // Lower the lift that holds the robot to the lander.
@@ -294,7 +307,7 @@ public class AutonomousStart extends LinearOpMode {
 
         telemetry.update();
 
-        moveLift(1, 0.25);
+        moveLift(1, 0.02);
 
         robot.limitSwitch.setPosition(1);
 
