@@ -31,7 +31,7 @@ import android.view.View;
 
 
 @Autonomous(name="Base Start- No Detach", group="Autonomous")
-// @Disabled
+@Disabled
 public class BaseNoDetach extends AutonomousStart {
 
     public void runOpMode() {

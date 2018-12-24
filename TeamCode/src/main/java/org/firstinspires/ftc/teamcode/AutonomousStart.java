@@ -267,15 +267,17 @@ public class AutonomousStart extends LinearOpMode {
         telemetry.addData(">", "Robot Ready.");
         telemetry.update();
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-
-
         if (tfod != null) {
             tfod.activate();
         }
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+    }
+
+    public void flashSet(boolean mode) {
+        CameraDevice.getInstance().setFlashTorchMode(mode);
     }
 
     public void initializeNoDetection() {
@@ -295,7 +297,7 @@ public class AutonomousStart extends LinearOpMode {
 
         // Lower the lift that holds the robot to the lander.
 
-        if (robot.digitalTouch.getState() == true) {
+       /* if (robot.digitalTouch.getState() == true) {
             telemetry.addData("Digital Touch", "Is Not Pressed");
             robot.leftArm.setPower(DRIVE_SPEED);
         } else {
@@ -304,10 +306,10 @@ public class AutonomousStart extends LinearOpMode {
             robot.limitSwitch.setPosition(0);
 
         }
-
+*/
         telemetry.update();
 
-        moveLift(1, 0.02);
+        moveLift(1, 0.1);
 
         robot.limitSwitch.setPosition(1);
 
@@ -317,11 +319,11 @@ public class AutonomousStart extends LinearOpMode {
 
         drive(.5, -180);
 
-        turn(-.5, 1.2);
+        //turn(-.5, 1.2);
 
         // Drive out of the lander zone, but not so far as to disturb the minerals on the field.
 
-        drive(-1, 360);
+       // drive(-1, 360);
 
     }
 

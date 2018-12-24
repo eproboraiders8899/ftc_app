@@ -29,7 +29,7 @@ import android.graphics.Color;
 import android.view.View;
 
 @Autonomous(name="Crater Start- No Detach", group="Autonomous")
-// @Disabled
+@Disabled
 public class CraterNoDetach extends AutonomousStart {
 
     public void runOpMode() {
