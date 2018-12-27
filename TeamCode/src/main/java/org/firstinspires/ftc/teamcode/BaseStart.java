@@ -43,7 +43,7 @@ public class BaseStart extends AutonomousStart {
         /* if(seeingGold() == true) {
 
             flashSet(false);
-
+     
             encoderDrive(DRIVE_SPEED,  8,  -8, 5.0);
             encoderDrive(1, 35, 35, 3);
             encoderDrive(.75, -10, 10, 3);
