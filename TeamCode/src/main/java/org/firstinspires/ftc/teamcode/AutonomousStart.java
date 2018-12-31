@@ -127,9 +127,9 @@ public class AutonomousStart extends LinearOpMode {
 
         while (robot.digitalTouch.getState() == true) {}
 
-        runtime.reset();
+       // runtime.reset();
 
-        while (runtime.seconds() < duration) {}
+       // while (runtime.seconds() < duration) {}
 
         robot.leftArm.setPower(0);
     }
@@ -317,9 +317,13 @@ public class AutonomousStart extends LinearOpMode {
 
         // Drive away *slightly* from the lander.
 
-        turn(-.5, .5);
+        // Editing code past this point affects Base and CraterStart drastically. Technically, the robot is "dismounted" before this.
 
-        drive(.5, -180);
+        turn(-.35, .5);
+
+        encoderDrive(.35,2,2,2);
+
+
 
         //turn(-.5, 1.2);
 
@@ -377,8 +381,6 @@ public class AutonomousStart extends LinearOpMode {
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 
             initTfod();
-
-            CameraDevice.getInstance().setFlashTorchMode(true);
         }
         else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
