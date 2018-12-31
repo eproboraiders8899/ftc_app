@@ -24,6 +24,12 @@ public class iterativeController extends OpMode {
 
     double  liftPower          = .5;
 
+    double  collectPower         = 0;
+    double  lowerPower         = 0;
+    double  raisePower          = 0;
+    double  linearLift         = 0;
+
+
     int     speedDirection     = 1;
 
     boolean leftPressed        = false;
@@ -42,7 +48,7 @@ public class iterativeController extends OpMode {
     boolean mineralLift        = false;
     boolean mineralButton      = false;
 
-    boolean linearLift         = false;
+   // boolean linearLift         = false;
     boolean linearButton       = false;
 
     String  trueMode;
@@ -61,7 +67,7 @@ public class iterativeController extends OpMode {
 
         robot.init(hardwareMap);
 
-        robot.linearWind.setZeroPowerBehavior(BRAKE);
+        //robot.linearWind.setZeroPowerBehavior(BRAKE);
 
         robot.leftClaw.setPosition(1);
 
@@ -131,7 +137,6 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
-        // "Tank" driving mode
 
         // Throttle the power of the wheels if the difference between the request and current power is too big.
 
@@ -149,36 +154,6 @@ public class iterativeController extends OpMode {
         else {
             rightPower = gamepad1.right_stick_y;
         }
-
-        /*
-        if(tank == true){
-
-            // "Tank" driving mode
-
-            // Throttle the power of the wheels if the difference between the request and current power is too big.
-
-            if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
-                leftPower = (leftPower + gamepad1.left_stick_y) / 2;
-            }
-            else {
-                leftPower = gamepad1.left_stick_y;
-            }
-
-            if (java.lang.Math.abs(gamepad1.right_stick_y - rightPower) > .1) {
-                rightPower = (rightPower + gamepad1.right_stick_y) / 2;
-            }
-            else {
-                rightPower = gamepad1.right_stick_y;
-            }
-        }
-        else {
-
-            // "POV" driving mode
-
-            leftPower  = -(Range.clip(-gamepad1.left_stick_y + gamepad1.right_stick_x, -1.0, 1.0));
-            rightPower = -(Range.clip(-gamepad1.left_stick_y - gamepad1.right_stick_x, -1.0, 1.0));
-        }
-        */
 
         // If half speed mode is on, divide the speed the motor is set to by 2.
 
@@ -230,7 +205,7 @@ public class iterativeController extends OpMode {
             robot.leftArm.setPower(0);
         }
 
-        robot.linearWind.setPower(gamepad2.left_stick_y * -.7);
+      //  robot.linearWind.setPower(gamepad2.left_stick_y * -.7);
 
         /*
         if(tank == true){
@@ -247,6 +222,30 @@ public class iterativeController extends OpMode {
         else{
             speed = "Full";
         }
+
+
+        //  New code to run the mineral collector
+
+       // if (java.lang.Math.abs(gamepad2.right_stick_y - raisePower) > .1) {
+     //       raisePower = (raisePower + gamepad2.right_stick_y) / 2;
+     //   }
+     //   else {
+      //      leftPower = gamepad1.left_stick_y;
+      //  }
+
+        robot.linearLift.setPower(collectPower * speedDirection);
+
+       // if (java.lang.Math.abs(gamepad2.left_stick_y - collectPower) > .1) {
+      //      linearLift = (collectPower + gamepad2.left_stick_y) / 2;
+      //  }
+       // else {
+            collectPower = gamepad2.left_stick_y;
+       // }
+
+
+
+
+
 
         // robot.mineralCollector.setPosition((gamepad2.right_stick_y / 2) + .5);
 
