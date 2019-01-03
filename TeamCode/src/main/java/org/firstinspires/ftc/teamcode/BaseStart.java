@@ -40,19 +40,12 @@ public class BaseStart extends AutonomousStart {
 
         flashSet(true);
 
-        encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
-
-        encoderDrive(DRIVE_SPEED,  -3,  3, 3.0);
-
-        encoderDrive(.75, 80, 80, 3);
-
-        /*
 
         if(seeingGold() == true) {
-
+b
             flashSet(false);
 
-            encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
+            encoderDrive(DRIVE_SPEED,  -1,  1, 3.0);
 
             encoderDrive(1, 35, 35, 3);
 
@@ -62,31 +55,29 @@ public class BaseStart extends AutonomousStart {
         }
         else {
 
-            encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
+            encoderDrive(DRIVE_SPEED,  5,  -5, 3.0);
 
             if(seeingGold() == true) {
 
-                encoderDrive(DRIVE_SPEED,  -1,  1, 3.0);
+            flashSet(false);
+
+                encoderDrive(DRIVE_SPEED,  -3,  3, 3.0);
 
                 encoderDrive(.75, 80, 80, 3);
-
-                flashSet(false);
-
-
-
             }
             else{
 
-                encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
-
                 flashSet(false);
 
-                //encoderDrive(1, 35, 35, 3);
-                //encoderDrive(.75, 7, -7, 3);
-                //encoderDrive(.75, 35, 35, 3);
+                encoderDrive(DRIVE_SPEED,  2.5,  -2.5, 3.0);
+
+                encoderDrive(1, 35, 35, 3);
+
+                encoderDrive(.75, -10, 10, 3);
+
+                encoderDrive(.75, 38, 38, 3);
             }
         }
-        */
 
 
        // encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
