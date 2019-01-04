@@ -51,11 +51,11 @@ public class BaseStart extends AutonomousStart {
 
             encoderDrive(.75, 9, -9, 3);
 
-            encoderDrive(.75, 35, 35, 3);
+            encoderDrive(.75, 30, 30, 3);
         }
         else {
 
-            encoderDrive(DRIVE_SPEED,  5,  -5, 3.0);
+            encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
 
             if(seeingGold() == true) {
 

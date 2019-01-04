@@ -46,22 +46,22 @@ public class CraterStart extends AutonomousStart {
 
             flashSet(false);
 
-            encoderDrive(DRIVE_SPEED,  -1,  1, 3.0);
+            encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
 
             encoderDrive(-1, 35, 35, 3);
 
         }
         else {
 
-            encoderDrive(DRIVE_SPEED,  5,  -5, 3.0);
+            encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
 
             if(seeingGold() == true) {
 
                 flashSet(false);
 
-                encoderDrive(DRIVE_SPEED,  -3,  3, 3.0);
+                encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
 
-                encoderDrive(-1, 35, 35, 3);
+                encoderDrive(-1, 27, 27, 3);
 
             }
             else{
