@@ -39,6 +39,8 @@ public class CraterNoDetach extends AutonomousStart {
 
         if(seeingGold() == true) {
             encoderDrive(-1, 35, 35, 3);
+
+            encoderDrive(-1, 35, 35, 3);
         }
         else {
             encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);  // S1: turn to scan right mineral with 5 Sec timeout
@@ -46,6 +48,8 @@ public class CraterNoDetach extends AutonomousStart {
             if(seeingGold() == true) {
 
                 encoderDrive(-1, 35, 35, 3);
+
+
             }
 
             else{

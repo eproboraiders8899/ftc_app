@@ -41,9 +41,11 @@ public class BaseNoDetach extends AutonomousStart {
 
 
         if(seeingGold() == true) {
+
             encoderDrive(.75, 80, 80, 3);
         }
         else {
+
             encoderDrive(DRIVE_SPEED,  -4,  4, 5.0);
 
             if(seeingGold() == true) {

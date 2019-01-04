@@ -42,12 +42,12 @@ public class BaseStart extends AutonomousStart {
 
 
         if(seeingGold() == true) {
-b
+
             flashSet(false);
 
-            encoderDrive(DRIVE_SPEED,  -1,  1, 3.0);
+            encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
 
-            encoderDrive(1, 35, 35, 3);
+            encoderDrive(1, 40, 40, 3);
 
             encoderDrive(.75, 9, -9, 3);
 
@@ -79,9 +79,6 @@ b
             }
         }
 
-
-       // encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-       // encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         depositMarker();
 

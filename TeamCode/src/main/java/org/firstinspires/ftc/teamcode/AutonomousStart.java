@@ -319,7 +319,7 @@ public class AutonomousStart extends LinearOpMode {
 
         // Editing code past this point affects Base and CraterStart drastically. Technically, the robot is "dismounted" before this.
 
-        turn(-.35, .5);
+        turn(-.35, .7);
 
         encoderDrive(.35,2,2,2);
 
@@ -447,6 +447,7 @@ public class AutonomousStart extends LinearOpMode {
 
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             int recognitionSize = 0;
+
             while( (runtime.seconds() < 5) && (recognitionSize == 0) ) {
                 updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
@@ -458,11 +459,13 @@ public class AutonomousStart extends LinearOpMode {
 
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
                 telemetry.update();
+                sleep(1000);
 
                 if (updatedRecognitions.size() >= 1) {
 
                     telemetry.addData("Size = 1 ", "Hi Adam");
                     telemetry.update();
+                    sleep(1000);
 
                     for (Recognition recognition : updatedRecognitions) {
 
@@ -471,17 +474,20 @@ public class AutonomousStart extends LinearOpMode {
                             telemetry.addData("Confidence", recognition.getConfidence());
                             telemetry.addData("Height", recognition.getHeight());
                             telemetry.update();
+                            sleep(1000);
 
 
                             isGold = true;
                             telemetry.addData("The Mineral is Gold", isGold);
                             telemetry.update();
+                            sleep(1000);
                         }
                         else{
 
                             isGold = false;
                             telemetry.addData("The Mineral is Silver", isGold);
                             telemetry.update();
+                            sleep(1000);
                         }
                     }
                 }
