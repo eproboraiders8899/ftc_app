@@ -25,33 +25,12 @@ public class iterativeController extends OpMode {
     double  liftPower          = .5;
 
     double  collectPower         = 0;
-    double  lowerPower         = 0;
-    double  raisePower          = 0;
-    double  linearLift         = 0;
-
-
-    int     speedDirection     = 1;
 
     boolean leftPressed        = false;
     boolean rightPressed       = false;
 
     boolean aPressed           = false;
     boolean bPressed           = false;
-
-    // boolean collectorToggle = false;
-    // boolean collectorButton = false;
-
-    // boolean tank            = true;
-
-    boolean halfSpeed          = false;
-
-    boolean mineralLift        = false;
-    boolean mineralButton      = false;
-
-   // boolean linearLift         = false;
-    boolean linearButton       = false;
-
-    String  trueMode;
 
     String  speed;
 
@@ -60,62 +39,50 @@ public class iterativeController extends OpMode {
 
     double  leftHalf;
     double  rightHalf;
-    double  linearSpeed;
+
+    // These variables determine whether half or reverse speed is on.
+    boolean halfSpeed          = false;
+    int     speedDirection     = 1;
 
     @Override
     public void init() {
 
         robot.init(hardwareMap);
 
-        //robot.linearWind.setZeroPowerBehavior(BRAKE);
-
         robot.leftClaw.setPosition(1);
-
-       // robot.leftLinear.setPosition(.5);
-       // robot.rightLinear.setPosition(.5);
-
-        // robot.mineralClaw.setPosition(.5);
-        // robot.mineralCollector.setPosition(.5);
-
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
     }
-
-    // Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
 
     @Override
-    public void init_loop() {
-    }
+    public void init_loop() { }
 
-    // Code to run ONCE when the driver hits PLAY
-
+    // Reset the timer when the "start" button is pressed.
     @Override
     public void start() {
         runtime.reset();
     }
 
-    // Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
     @Override
     public void loop() {
 
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // Throttle the power of the wheels if the difference between the request and current power is too big.
-        // Toggle "tank" driving mode with the A button.
+        // IterativeController is divided into 4 parts:
+        // 1. TOGGLES
+        // Contains the controls for toggling certain boolean variables with a button.
+        // 2. POWER
+        // Contains math (and some controls) regarding setting the speed of certain motors.
+        // 3. MOVEMENT
+        // Contains the controls to make the motors actually move.
+        // 4. TELEMETRY
+        // Contains the code used to display statistics on Telemetry.
 
-        /*
-        if(gamepad1.a == true && aPressed == false){
-            tank = !tank;
-            aPressed = true;
-        }
+        // 1. TOGGLES
+        // Every "mode" that is toggled with a button, unless specified otherwise, runs in
+        // a specific way:
+        // FINISH FINISH FINISH
 
-        if(gamepad1.a == false) {
-            aPressed = false;
-        }
-        */
-
-        // Toggle "reverse speed" mode with the B button.
+        // Toggle "reverse speed" mode with the A button on the first controller.
 
         if(gamepad1.a == true && aPressed == false){
             speedDirection = speedDirection * -1;
@@ -126,7 +93,7 @@ public class iterativeController extends OpMode {
             aPressed = false;
         }
 
-        // Toggle "half speed" mode with the B button.
+        // Toggle "half speed" mode with the B button on the first controller.
 
         if(gamepad1.b == true && bPressed == false){
             halfSpeed = !halfSpeed;
@@ -137,8 +104,10 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
+        // POWER
 
-        // Throttle the power of the wheels if the difference between the request and current power is too big.
+        // Throttle the power of the wheels if the difference
+        // between the request and current power is too big.
 
         if (java.lang.Math.abs(gamepad1.left_stick_y - leftPower) > .1) {
             leftPower = (leftPower + gamepad1.left_stick_y) / 2;
@@ -155,7 +124,50 @@ public class iterativeController extends OpMode {
             rightPower = gamepad1.right_stick_y;
         }
 
-        // If half speed mode is on, divide the speed the motor is set to by 2.
+        // Changing the speed of the lander lift on the robot works similarly to toggling
+        // a variable, with a number incrementing instead of a boolean changing.
+
+        // The speed of the lander lift decreases by 5% when the left "arrow" button on the first
+        // controller is pressed, and increases by the same amount when the right "arrow" button
+        // is pressed instead.
+
+        // Speed decrement:
+
+        if(gamepad2.dpad_left == true && leftPressed == false) {
+            leftPressed = true;
+            liftPower -= .05;
+        }
+
+        if(true != gamepad2.dpad_left){
+            leftPressed = false;
+        }
+
+        // Speed increment:
+
+        if(gamepad2.dpad_right == true && rightPressed == false) {
+            rightPressed = true;
+            liftPower += .05;
+        }
+
+        if(true != gamepad2.dpad_right){
+            rightPressed = false;
+        }
+
+        // Check if the lift speed is between 0 and 1, and set the power within those bounds.
+
+        liftPower = Range.clip(liftPower, 0, 1.0);
+
+        // ADD LINEAR LIFT COMMENTS HERE
+
+        collectPower = gamepad2.left_stick_y;
+
+        robot.linearLift.setPower(collectPower * speedDirection * -.5);
+
+        // MOVEMENT
+        // If half speed mode or reverse mode, set the power of the motors to half of the speed
+        // or the reverse of the speed, respectively.
+
+        // Half speed mode and reverse mode do not work together; half speed takes priority.
 
         if(halfSpeed == true){
             leftHalf  = leftPower  / 2;
@@ -168,31 +180,9 @@ public class iterativeController extends OpMode {
             robot.rightDrive.setPower(rightPower * speedDirection);
         }
 
-        // When a button on the dpad is pressed ONCE, increment the speed of the lift a small amount.
-
-        if(gamepad2.dpad_left == true && leftPressed == false) {
-            leftPressed = true;
-            liftPower -= .05;
-        }
-
-        if(true != gamepad2.dpad_left){
-            leftPressed = false;
-        }
-
-        if(gamepad2.dpad_right == true && rightPressed == false) {
-            rightPressed = true;
-            liftPower += .05;
-        }
-
-        if(true != gamepad2.dpad_right){
-            rightPressed = false;
-        }
-
-        // Check if the lift speed is <= 1 and >= 0.
-
-        liftPower = Range.clip(liftPower, 0, 1.0);
-
-        // Run the lift based on the designated speed.
+        // If the up "arrow" button on the first controller, move the lander lift up at the
+        // predefined speed; if the down "arrow" button is pressed, move the lift downwards.
+        // Otherwise (including having both buttons pressed), do not move the lift.
 
         if(gamepad2.dpad_up == true) {
             robot.leftArm.setPower(liftPower);
@@ -205,16 +195,7 @@ public class iterativeController extends OpMode {
             robot.leftArm.setPower(0);
         }
 
-      //  robot.linearWind.setPower(gamepad2.left_stick_y * -.7);
-
-        /*
-        if(tank == true){
-            trueMode = "Tank";
-        }
-        else{
-            trueMode = "POV";
-        }
-        */
+        // TELEMETRY
 
         if(halfSpeed == true){
             speed = "Half";
@@ -223,131 +204,16 @@ public class iterativeController extends OpMode {
             speed = "Full";
         }
 
-
-        //  New code to run the mineral collector
-
-       // if (java.lang.Math.abs(gamepad2.right_stick_y - raisePower) > .1) {
-     //       raisePower = (raisePower + gamepad2.right_stick_y) / 2;
-     //   }
-     //   else {
-      //      leftPower = gamepad1.left_stick_y;
-      //  }
-
-        robot.linearLift.setPower(collectPower * speedDirection);
-
-       // if (java.lang.Math.abs(gamepad2.left_stick_y - collectPower) > .1) {
-      //      linearLift = (collectPower + gamepad2.left_stick_y) / 2;
-      //  }
-       // else {
-            collectPower = gamepad2.left_stick_y;
-       // }
-
-
-
-
-
-
-        // robot.mineralCollector.setPosition((gamepad2.right_stick_y / 2) + .5);
-
-        // robot.mineralClaw.setPosition((gamepad2.left_stick_x / 2) + .5);
-
-        /*
-        robot.mineralCollector.setPosition((gamepad2.left_stick_y / 2) + .5);
-
-        linearSpeed = (gamepad2.right_stick_y / 2) + .5;
-
-        robot.leftLinear.setPosition(linearSpeed);
-        robot.rightLinear.setPosition(1 - linearSpeed);
-
-        if(gamepad2.left_bumper == true) {
-            robot.mineralClaw.setPosition(1);
-        }
-        else {
-            robot.mineralClaw.setPosition(0);
-        }
-
-        if(gamepad2.a == true && collectorButton == false){
-            collectorToggle = !collectorToggle;
-            collectorButton = true;
-        }
-
-        if(gamepad2.a == false) {
-            collectorButton = false;
-        }
-        */
-
-        // Toggle which part of the mineral collector is being controlled based on the right trigger button of the second controller.
-
-        /*
-        if(gamepad2.right_stick_button == true && mineralButton == false){
-            mineralLift = !mineralLift;
-            mineralButton = true;
-        }
-
-        if(gamepad2.right_stick_button == false) {
-            mineralButton = false;
-        }
-
-        if(mineralLift == true) {
-            robot.mineralCollector.setPosition((gamepad2.right_stick_y / 2) + .5);
-        }
-        else {
-            robot.mineralClaw.setPosition((gamepad2.right_stick_y / 2) + .5);
-        }
-
-        // Toggle which part of the linear lift is being controlled based on the left trigger button of the second controller.
-
-        if(gamepad2.left_stick_button == true && linearButton == false){
-            linearLift = !linearLift;
-            linearButton = true;
-        }
-
-        if(gamepad2.left_stick_button == false) {
-            mineralButton = false;
-        }
-
-        if(linearLift == true) {
-            robot.linearLift.setPower(gamepad2.left_stick_y);
-            robot.linearWind.setPower(gamepad2.left_stick_y);
-        }
-        else {
-            robot.linearLift.setPower(0);
-            robot.linearWind.setPower(0);
-            robot.leftLinear.setPosition((gamepad2.left_stick_y / 2) + .5);
-            robot.leftLinear.setPosition(-(gamepad2.left_stick_y / 2) + .5);
-        }
-
-        if(collectorToggle == true) {
-            robot.mineralCollector.setPosition(45);
-        }
-        else {
-            robot.mineralCollector.setPosition(0);
-        }
-
-        if (robot.digitalTouch.getState() == false) {
-        telemetry.addData("Digital Touch", "Is Pressed");
-        }
-        else if (robot.digitalTouch.getState() == true) {
-            telemetry.addData("Digital Touch", "Isn't Pressed");
-        }
-        */
-
         // Show the elapsed game time, wheel power, wheel distance, and motor mode.
         leftDistance  = robot.leftDrive.getCurrentPosition();
         rightDistance = robot.rightDrive.getCurrentPosition();
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motor Speeds:", "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
-
-        /*
-        telemetry.addData("Toggles:", "Mode: " + trueMode);
-        telemetry.addData("Toggles:", "Speed: " + speed);
-        */
+        telemetry.addData("Motor Speeds:",
+                "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
 
         telemetry.update();
     }
-
-    // Code to run ONCE after the driver hits STOP
 
     @Override
     public void stop() {
