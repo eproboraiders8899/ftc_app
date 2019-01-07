@@ -155,13 +155,15 @@ public class iterativeController extends OpMode {
 
         // Check if the lift speed is between 0 and 1, and set the power within those bounds.
 
-        liftPower = Range.clip(liftPower, 0, 1.0);
+
 
         // ADD LINEAR LIFT COMMENTS HERE
 
-        collectPower = gamepad2.left_stick_y;
+        collectPower = gamepad2.left_stick_y * -1;
 
-        robot.linearLift.setPower(collectPower * speedDirection * -.5);
+        collectPower = Range.clip(collectPower, -.25, 1.0);
+
+        robot.linearLift.setPower(collectPower);
 
         // MOVEMENT
         // If half speed mode or reverse mode, set the power of the motors to half of the speed
