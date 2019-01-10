@@ -47,52 +47,64 @@ import java.util.Locale;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-/**
- * This is NOT an opmode.
- *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
- */
+// MyHardwarePushbot is a variation of HardwarePushbot, with a different combination of motors
+// and servos tailored to our specific use.
+
+
 public class MyHardwarePushbot
 {
-    /* Public OpMode members. */
-    public DcMotor leftDrive        = null;
-    public DcMotor rightDrive       = null;
-    public DcMotor leftArm          = null;
+    // The function of each motor will be labeled:
 
+    // "leftDrive" is the motor controlling the wheels on the left side of our robot.
 
+    public DcMotor        leftDrive    = null;
 
-    //public DcMotor linearWind       = null;
-   // public DcMotor linearPull       = null;
-    public DcMotor linearLift       = null;
+    // "rightDrive" is the motor controlling the wheels on the right side of our robot.
 
+    public DcMotor        rightDrive   = null;
 
-    public Servo   leftClaw         = null;
-    public Servo   limitSwitch      = null;
+    // landerLift is the motor controlling the lift on our robot used
+    // to hook onto (and off of) the lander in the center of the playing field.
 
+    public DcMotor        landerLift   = null;
 
-    // public Servo   mineralCollector = null;
-    // public Servo   mineralClaw      = null;
-    // public Servo   leftLinear       = null;
-    // public Servo   rightLinear      = null;
+    // linearTurn is the motor used to control the angle that the linearTurn is above the ground.
+    // Note that linearTurn is a motor because a servo wasn't strong enough to lift our linear
+    // lift off of the ground.
 
+    public DcMotor        linearTurn   = null;
 
-    /*
-    public ColorSensor colorSensor = null;
-    public DistanceSensor distanceSensor = null;
-    */
+    // leftLinear and rightLinear work together to raise and lower the linear lift; one simply
+    // moves in the opposite direction of the other.
 
-    public DigitalChannel digitalTouch = null;  // Hardware Device Object
+    public DcMotor        leftLinear   = null;
+    public DcMotor        rightLinear  = null;
+
+    // markerHolder is the servo that holds our team's marker; it moves downwards when our robot
+    // is in the base and ready to deposit said marker.
+
+    public Servo          markerHolder = null;
+
+    // limitServo is the servo that moves the limit switch on our robot out of the way when
+    // the switch is pressed (or in our case, the robot hits the ground after dismounting
+    // from the lander).
+
+    public Servo          limitServo   = null;
+
+    // boxServo is the servo that rotates the box (and the shaft within) used for
+    // mineral collection.
+
+    public Servo          boxServo     = null;
+
+    // shaftServo is the servo that rotates the shaft inside of the box used for
+    // mineral collection.
+
+    public Servo          shaftServo   = null;
+
+    // limitButton is the digital sensor that detects when the robot has touched the ground
+    // after dismounting fom the lander; the button is pressed when this happens.
+
+    public DigitalChannel limitButton        = null;
 
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -105,64 +117,50 @@ public class MyHardwarePushbot
     public MyHardwarePushbot() {}
 
     /* Initialize standard Hardware interfaces */
+
     public void init(HardwareMap ahwMap) {
+
         // Save reference to Hardware map
+
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftArm    = hwMap.get(DcMotor.class, "left_arm");
+        leftDrive   = hwMap.get(DcMotor.class, "left_drive");
+        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
+        landerLift  = hwMap.get(DcMotor.class, "lander_lift");
+        linearTurn  = hwMap.get(DcMotor.class, "linear_turn");
+        leftLinear  = hwMap.get(DcMotor.class, "left_linear");
+        rightLinear = hwMap.get(DcMotor.class, "right_linear");
 
+        limitButton = hwMap.get(DigitalChannel.class, "limit_button");
+        limitButton.setMode(DigitalChannel.Mode.INPUT);
 
-        linearLift = hwMap.get(DcMotor.class, "linear_lift");
-       // linearPull = hwMap.get(DcMotor.class, "linear_Pull");
-       // linearWind = hwMap.get(DcMotor.class, "linear_wind");
-
-
-
-        /*
-        colorSensor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        distanceSensor = hwMap.get(DistanceSensor.class, "sensor_color_distance");
-        */
-
-        digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
-        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
-
-
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        linearLift.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        linearTurn.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
+
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        leftArm.setPower(0);
-
-
-        linearLift.setPower(0);
-        //linearPull.setPower(0);
-       // linearWind.setPower(0);
-
-
+        landerLift.setPower(0);
+        linearTurn.setPower(0);
+        leftLinear.setPower(0);
+        rightLinear.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
+
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //linearWind.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-       // linearPull.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        linearTurn.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftClaw  = hwMap.get(Servo.class, "left_hand");
-        limitSwitch = hwMap.get(Servo.class, "limit_servo");
 
-
-        // mineralCollector = hwMap.get(Servo.class, "mineral_collector");
-        // mineralClaw = hwMap.get(Servo.class, "mineral_claw");
-        // leftLinear = hwMap.get(Servo.class, "left_linear");
-        // rightLinear = hwMap.get(Servo.class, "right_linear");
-
+        markerHolder  = hwMap.get(Servo.class, "marker_holder");
+        limitServo = hwMap.get(Servo.class, "limit_servo");
+        boxServo = hwMap.get(Servo.class, "box_servo");
+        shaftServo = hwMap.get(Servo.class, "shaft_servo");
     }
  }

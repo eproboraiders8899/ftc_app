@@ -15,54 +15,85 @@ import static java.lang.Double.valueOf;
 
 public class iterativeController extends OpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
+    // MyHardwarePushbot is a variation on the HardwarePushbot example, modified for use
+    // in our code specifically.
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    double  leftPower          = 0;
-    double  rightPower         = 0;
+    // These variables are used to store the speed at which a given motor runs.
 
-    double  liftPower          = .5;
+    double  leftPower      = 0;
+    double  rightPower     = 0;
 
-    double  collectPower         = 0;
+    double  liftPower      = .5;
 
-    boolean leftPressed        = false;
-    boolean rightPressed       = false;
+    double  collectPower   = 0;
 
-    boolean aPressed           = false;
-    boolean bPressed           = false;
+    double  linearPower    = 0;
 
-    String  speed;
+    // These variables are used in "toggles" to determine whether a given button is pressed.
 
-    double  leftDistance;
-    double  rightDistance;
+    boolean leftPressed    = false;
+    boolean rightPressed   = false;
+
+    boolean aPressed       = false;
+    boolean bPressed       = false;
+
+    // These variables determine whether half or reverse speed is on.
+
+    boolean halfSpeed      = false;
+    int     speedDirection = 1;
+
+    // These variables are used when half speed mode is on as "half" of the original speed that
+    // the motor was supposed to run.
 
     double  leftHalf;
     double  rightHalf;
 
-    // These variables determine whether half or reverse speed is on.
-    boolean halfSpeed          = false;
-    int     speedDirection     = 1;
+    // These variables, as explained later, are used only in telemetry.
+
+    String speed;
+
+    double  leftDistance;
+    double  rightDistance;
+
+    // "runtime" is also used to display the time in telemetry.
+
+    private ElapsedTime runtime = new ElapsedTime();
+
+    // "init()" runs when the "init" button is pressed.
 
     @Override
     public void init() {
 
+        // Initialize the robot, which was created above.
+
         robot.init(hardwareMap);
 
-        robot.leftClaw.setPosition(1);
+        // Set the "markerHolder" servo to an upright position so it does not fall down.
+
+        robot.markerHolder.setPosition(1);
+
+        // Display in Telemetry that the robot is, in fact, initialized.
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
     }
 
-    @Override
-    public void init_loop() { }
+    // "init_loop()" runs in a loop when the "init" button is pressed; it is not used currently.
 
+    @Override
+    public void init_loop() {}
+
+    // "start()" runs when the "start" button is pressed.
     // Reset the timer when the "start" button is pressed.
+
     @Override
     public void start() {
         runtime.reset();
     }
+
+    // "loop()" runs in a loop when the "start" button is pressed.
 
     @Override
     public void loop() {
@@ -78,9 +109,10 @@ public class iterativeController extends OpMode {
         // Contains the code used to display statistics on Telemetry.
 
         // 1. TOGGLES
-        // Every "mode" that is toggled with a button, unless specified otherwise, runs in
-        // a specific way:
-        // FINISH FINISH FINISH
+        // Every "mode" that is toggled with a button only toggles the boolean the button is tied
+        // to when it is initially pressed down; we do this by creating a variable that is true
+        // when the button is pressed down, but updates at the same time that the original
+        // variable does.
 
         // Toggle "reverse speed" mode with the A button on the first controller.
 
@@ -155,15 +187,21 @@ public class iterativeController extends OpMode {
 
         // Check if the lift speed is between 0 and 1, and set the power within those bounds.
 
+        liftPower = Range.clip(liftPower, -1.0, 1.0);
 
-
-        // ADD LINEAR LIFT COMMENTS HERE
+        // Set the speed of the motor controlling the angle of the (mineral) linear lift
+        // to the "y" coordinate of the right stick on the 2nd controller.
 
         collectPower = gamepad2.left_stick_y * -1;
 
+        // It takes much less power to move the linear lift upwards than downwards; we clip the
+        // speed downwards at a quarter to prevent the lift from "slamming" downwards.
+
         collectPower = Range.clip(collectPower, -.25, 1.0);
 
-        robot.linearLift.setPower(collectPower);
+        // Set linearPower to the y coordinate of the right stick on the 2nd controller.
+
+        linearPower = gamepad2.right_stick_y * .5;
 
         // MOVEMENT
         // If half speed mode or reverse mode, set the power of the motors to half of the speed
@@ -187,17 +225,26 @@ public class iterativeController extends OpMode {
         // Otherwise (including having both buttons pressed), do not move the lift.
 
         if(gamepad2.dpad_up == true) {
-            robot.leftArm.setPower(liftPower);
+            robot.landerLift.setPower(liftPower);
         }
         else if (gamepad2.dpad_down == true) {
-            robot.leftArm.setPower(-liftPower);
+            robot.landerLift.setPower(-liftPower);
         }
 
         if (gamepad2.dpad_up != true && gamepad2.dpad_down != true){
-            robot.leftArm.setPower(0);
+            robot.landerLift.setPower(0);
         }
 
+        robot.linearTurn.setPower(collectPower);
+
+        // left and rightLinear run in opposite directions since they wind and unwind a string.
+
+        robot.leftLinear.setPower(linearPower);
+        robot.rightLinear.setPower(-linearPower);
+
         // TELEMETRY
+
+        // The variable "speed" is strictly used for Telemetry.
 
         if(halfSpeed == true){
             speed = "Half";
@@ -212,10 +259,13 @@ public class iterativeController extends OpMode {
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Motor Speeds:",
-                "Left: (%.2f), Right: (%.2f), Lift: (%.2f)", leftPower, rightPower, liftPower);
+                "Left: (%.2f), Right: (%.2f), Lift: (%.2f)",
+                leftPower, rightPower, liftPower);
 
         telemetry.update();
     }
+
+    // "stop()" runs when the "stop" button is pressed; it is not used currently.
 
     @Override
     public void stop() {

@@ -20,7 +20,7 @@ public class ServoTest extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        robot.leftClaw.setPosition(1);
+        robot.markerHolder.setPosition(1);
 
         telemetry.addData(">", "Robot Ready.");
         telemetry.update();
@@ -31,11 +31,11 @@ public class ServoTest extends LinearOpMode {
 
         runtime.reset();
 
-        robot.leftClaw.setPosition(.50);
+        robot.markerHolder.setPosition(.50);
 
         while (runtime.seconds() < 3.0) {}
 
-        robot.leftClaw.setPosition(1);
+        robot.markerHolder.setPosition(1);
 
         while (runtime.seconds() < 6.0) {}
 
