@@ -33,6 +33,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -96,10 +97,10 @@ public class MyHardwarePushbot
 
     public Servo          boxServo     = null;
 
-    // shaftServo is the servo that rotates the shaft inside of the box used for
+    // shaftServo is the (360 degree) servo that rotates the shaft inside of the box used for
     // mineral collection.
 
-    public Servo          shaftServo   = null;
+    public CRServo        shaftServo   = null;
 
     // limitButton is the digital sensor that detects when the robot has touched the ground
     // after dismounting fom the lander; the button is pressed when this happens.
@@ -161,6 +162,6 @@ public class MyHardwarePushbot
         markerHolder  = hwMap.get(Servo.class, "marker_holder");
         limitServo = hwMap.get(Servo.class, "limit_servo");
         boxServo = hwMap.get(Servo.class, "box_servo");
-        shaftServo = hwMap.get(Servo.class, "shaft_servo");
+        shaftServo = hwMap.get(CRServo.class, "shaft_servo");
     }
  }

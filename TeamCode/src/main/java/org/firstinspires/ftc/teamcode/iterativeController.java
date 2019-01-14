@@ -31,6 +31,8 @@ public class iterativeController extends OpMode {
 
     double  linearPower    = 0;
 
+    double  shaftSpeed     = 128;
+
     // These variables are used in "toggles" to determine whether a given button is pressed.
 
     boolean leftPressed    = false;
@@ -49,6 +51,10 @@ public class iterativeController extends OpMode {
 
     double  leftHalf;
     double  rightHalf;
+
+    // These variables are used to determine the position at which a servo should be at.
+
+    double boxPosition;
 
     // These variables, as explained later, are used only in telemetry.
 
@@ -201,7 +207,38 @@ public class iterativeController extends OpMode {
 
         // Set linearPower to the y coordinate of the right stick on the 2nd controller.
 
-        linearPower = gamepad2.right_stick_y * .5;
+        linearPower = gamepad2.right_stick_y;
+
+        // If the left trigger on the 2nd controller is pressed, push minerals out of the mineral
+        // collector; if the right trigger is pressed, suck minerals in. Otherwise, don't
+        // rotate the 360 degree servo.
+
+        if(gamepad2.left_trigger >= .3 && gamepad2. left_trigger >= .3) {
+            shaftSpeed = 0;
+        }
+        else if(gamepad2.left_trigger >= .3){
+            shaftSpeed = -.5;
+        }
+        else if(gamepad2.right_trigger >= .3){
+            shaftSpeed = .5;
+        }
+        else{
+            shaftSpeed = 0;
+        }
+
+        // Move the mineral collector box servo forward if the right bumper on the 2nd controller
+        // is pressed; move it backwards if the left bumper is pressed. Clip the position within
+        // 0 and 1 to avoid giving the servo an invalid position.
+
+        if(gamepad2.left_bumper && gamepad2. right_bumper) {}
+        else if(gamepad2.left_bumper){
+            boxPosition = 0;
+        }
+        else if(gamepad2.right_bumper){
+            boxPosition = 1;
+        }
+
+        boxPosition = Range.clip(boxPosition, 0, 1);
 
         // MOVEMENT
         // If half speed mode or reverse mode, set the power of the motors to half of the speed
@@ -241,6 +278,12 @@ public class iterativeController extends OpMode {
 
         robot.leftLinear.setPower(linearPower);
         robot.rightLinear.setPower(-linearPower);
+
+        // Set the positions of the shaft and boxServos to their corresponding positions.
+
+        robot.shaftServo.setPower(shaftSpeed);
+
+        robot.boxServo.setPosition(boxPosition);
 
         // TELEMETRY
 
