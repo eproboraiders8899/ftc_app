@@ -114,7 +114,11 @@ public class iterativeController extends OpMode {
         // 4. TELEMETRY
         // Contains the code used to display statistics on Telemetry.
 
+
+        //------------------------------------------------------------------------------------------
         // 1. TOGGLES
+        //------------------------------------------------------------------------------------------
+
         // Every "mode" that is toggled with a button only toggles the boolean the button is tied
         // to when it is initially pressed down; we do this by creating a variable that is true
         // when the button is pressed down, but updates at the same time that the original
@@ -142,7 +146,9 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
-        // POWER
+        //------------------------------------------------------------------------------------------
+        // 2. POWER
+        //------------------------------------------------------------------------------------------
 
         // Throttle the power of the wheels if the difference
         // between the request and current power is too big.
@@ -213,14 +219,14 @@ public class iterativeController extends OpMode {
         // collector; if the right trigger is pressed, suck minerals in. Otherwise, don't
         // rotate the 360 degree servo.
 
-        if(gamepad2.left_trigger >= .3 && gamepad2. left_trigger >= .3) {
+        if(gamepad2.left_trigger >= .3 && gamepad2. right_trigger >= .3) {
             shaftSpeed = 0;
         }
         else if(gamepad2.left_trigger >= .3){
-            shaftSpeed = -.5;
+            shaftSpeed = -.7;
         }
         else if(gamepad2.right_trigger >= .3){
-            shaftSpeed = .5;
+            shaftSpeed = .7;
         }
         else{
             shaftSpeed = 0;
@@ -230,7 +236,7 @@ public class iterativeController extends OpMode {
         // is pressed; move it backwards if the left bumper is pressed. Clip the position within
         // 0 and 1 to avoid giving the servo an invalid position.
 
-        if(gamepad2.left_bumper && gamepad2. right_bumper) {}
+        if(gamepad2.left_bumper && gamepad2.right_bumper) {}
         else if(gamepad2.left_bumper){
             boxPosition = 0;
         }
@@ -240,7 +246,10 @@ public class iterativeController extends OpMode {
 
         boxPosition = Range.clip(boxPosition, 0, 1);
 
-        // MOVEMENT
+        //------------------------------------------------------------------------------------------
+        // 3. MOVEMENT
+        //------------------------------------------------------------------------------------------
+
         // If half speed mode or reverse mode, set the power of the motors to half of the speed
         // or the reverse of the speed, respectively.
 
@@ -285,7 +294,9 @@ public class iterativeController extends OpMode {
 
         robot.boxServo.setPosition(boxPosition);
 
-        // TELEMETRY
+        //------------------------------------------------------------------------------------------
+        // 4. TELEMETRY
+        //------------------------------------------------------------------------------------------
 
         // The variable "speed" is strictly used for Telemetry.
 

@@ -51,7 +51,6 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 // MyHardwarePushbot is a variation of HardwarePushbot, with a different combination of motors
 // and servos tailored to our specific use.
 
-
 public class MyHardwarePushbot
 {
     // The function of each motor will be labeled:
@@ -148,6 +147,7 @@ public class MyHardwarePushbot
         linearTurn.setPower(0);
         leftLinear.setPower(0);
         rightLinear.setPower(0);
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 

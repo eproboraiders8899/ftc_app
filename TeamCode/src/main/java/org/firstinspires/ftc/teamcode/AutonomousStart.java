@@ -246,7 +246,7 @@ public class AutonomousStart extends LinearOpMode {
         // Editing code past this point affects Base and CraterStart drastically.
         // Technically, the robot is "dismounted" before this.
 
-        turn(-.30, .7);
+        turn(-.30, 1);
 
         encoderDrive(.35,2,2,2);
     }
