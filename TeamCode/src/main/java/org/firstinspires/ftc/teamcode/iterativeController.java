@@ -46,6 +46,8 @@ public class iterativeController extends OpMode {
     boolean halfSpeed      = false;
     int     speedDirection = 1;
 
+    boolean powerCap = false;
+
     // These variables are used when half speed mode is on as "half" of the original speed that
     // the motor was supposed to run.
 
@@ -209,7 +211,25 @@ public class iterativeController extends OpMode {
         // It takes much less power to move the linear lift upwards than downwards; we clip the
         // speed downwards at a quarter to prevent the lift from "slamming" downwards.
 
-        collectPower = Range.clip(collectPower, -.25, 1.0);
+
+
+        // Cap the power at .5 if the power is greater than .5 for 1 second.
+
+        if(collectPower <= .5 && !powerCap){
+            runtime.reset();
+        }
+
+        if(runtime.seconds() >= 1){
+            powerCap = !powerCap;
+            runtime.reset();
+        }
+
+        if(powerCap){
+            collectPower = Range.clip(collectPower, -.5, .5);
+        }
+        else {
+            collectPower = Range.clip(collectPower, -.5, 1.0);
+        }
 
         // Set linearPower to the y coordinate of the right stick on the 2nd controller.
 
@@ -285,8 +305,7 @@ public class iterativeController extends OpMode {
 
         // left and rightLinear run in opposite directions since they wind and unwind a string.
 
-        robot.leftLinear.setPower(linearPower);
-        robot.rightLinear.setPower(linearPower);
+        robot.linearLift.setPower(linearPower);
 
         // Set the positions of the shaft and boxServos to their corresponding positions.
 
@@ -311,7 +330,7 @@ public class iterativeController extends OpMode {
         leftDistance  = robot.leftDrive.getCurrentPosition();
         rightDistance = robot.rightDrive.getCurrentPosition();
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
+
         telemetry.addData("Motor Speeds:",
                 "Left: (%.2f), Right: (%.2f), Lift: (%.2f)",
                 leftPower, rightPower, liftPower);

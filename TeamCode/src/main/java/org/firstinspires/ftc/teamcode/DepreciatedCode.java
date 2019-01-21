@@ -5,6 +5,8 @@ package org.firstinspires.ftc.teamcode;
 
 public class DepreciatedCode {
 
+    // telemetry.addData("Status", "Run Time: " + runtime.toString());
+
     // static final double COUNTS_PER_MOTOR_REV  = 1440;
     // static final double DRIVE_GEAR_REDUCTION  = 2.0;
     // static final double WHEEL_DIAMETER_INCHES = 4.0;
@@ -264,7 +266,7 @@ public class DepreciatedCode {
 
         linearSpeed = (gamepad2.right_stick_y / 2) + .5;
 
-        robot.leftLinear.setPosition(linearSpeed);
+        robot.linearLift.setPosition(linearSpeed);
         robot.rightLinear.setPosition(1 - linearSpeed);
 
         if(gamepad2.left_bumper == true) {
@@ -321,8 +323,8 @@ public class DepreciatedCode {
         else {
             robot.linearTurn.setPower(0);
             robot.linearWind.setPower(0);
-            robot.leftLinear.setPosition((gamepad2.left_stick_y / 2) + .5);
-            robot.leftLinear.setPosition(-(gamepad2.left_stick_y / 2) + .5);
+            robot.linearLift.setPosition((gamepad2.left_stick_y / 2) + .5);
+            robot.linearLift.setPosition(-(gamepad2.left_stick_y / 2) + .5);
         }
 
         if(collectorToggle == true) {
@@ -361,7 +363,7 @@ public class DepreciatedCode {
         }
         */
 
-    // robot.leftLinear.setPosition(.5);
+    // robot.linearLift.setPosition(.5);
     // robot.rightLinear.setPosition(.5);
 
     // robot.mineralClaw.setPosition(.5);
@@ -383,12 +385,12 @@ public class DepreciatedCode {
        // while (runtime.seconds() < duration) {}//public DcMotor linearWind       = null;
        //   // public DcMotor linearPull       = null;// public Servo   mineralCollector = null;
        //    // public Servo   mineralClaw      = null;
-       //    // public Servo   leftLinear       = null;
+       //    // public Servo   linearLift       = null;
        //    // public Servo   rightLinear      = null;// linearPull = hwMap.get(DcMotor.class, "linear_Pull");
        //       // linearWind = hwMap.get(DcMotor.class, "linear_wind"); //linearPull.setPower(0);
        //       // linearWind.setPower(0);// mineralCollector = hwMap.get(Servo.class, "mineral_collector");
        //        // mineralClaw = hwMap.get(Servo.class, "mineral_claw");
-       //        // leftLinear = hwMap.get(Servo.class, "left_linear");
+       //        // linearLift = hwMap.get(Servo.class, "linear_lift");
        //        // rightLinear = hwMap.get(Servo.class, "right_linear");//linearWind.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
        //       // linearPull.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 

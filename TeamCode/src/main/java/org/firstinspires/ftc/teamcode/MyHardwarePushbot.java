@@ -74,11 +74,10 @@ public class MyHardwarePushbot
 
     public DcMotor        linearTurn   = null;
 
-    // leftLinear and rightLinear work together to raise and lower the linear lift; one simply
+    // linearLift works to raise and lower the linear lift; one simply
     // moves in the opposite direction of the other.
 
-    public DcMotor        leftLinear   = null;
-    public DcMotor        rightLinear  = null;
+    public DcMotor        linearLift   = null;
 
     // markerHolder is the servo that holds our team's marker; it moves downwards when our robot
     // is in the base and ready to deposit said marker.
@@ -129,8 +128,7 @@ public class MyHardwarePushbot
         rightDrive  = hwMap.get(DcMotor.class, "right_drive");
         landerLift  = hwMap.get(DcMotor.class, "lander_lift");
         linearTurn  = hwMap.get(DcMotor.class, "linear_turn");
-        leftLinear  = hwMap.get(DcMotor.class, "left_linear");
-        rightLinear = hwMap.get(DcMotor.class, "right_linear");
+        linearLift  = hwMap.get(DcMotor.class, "linear_lift");
 
         limitButton = hwMap.get(DigitalChannel.class, "limit_button");
         limitButton.setMode(DigitalChannel.Mode.INPUT);
@@ -145,8 +143,7 @@ public class MyHardwarePushbot
         rightDrive.setPower(0);
         landerLift.setPower(0);
         linearTurn.setPower(0);
-        leftLinear.setPower(0);
-        rightLinear.setPower(0);
+        linearLift.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -154,8 +151,7 @@ public class MyHardwarePushbot
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         linearTurn.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightLinear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        linearLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
 
