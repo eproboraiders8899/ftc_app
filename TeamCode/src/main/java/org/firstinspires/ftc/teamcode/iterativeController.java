@@ -286,7 +286,7 @@ public class iterativeController extends OpMode {
         // left and rightLinear run in opposite directions since they wind and unwind a string.
 
         robot.leftLinear.setPower(linearPower);
-        robot.rightLinear.setPower(-linearPower);
+        robot.rightLinear.setPower(linearPower);
 
         // Set the positions of the shaft and boxServos to their corresponding positions.
 
