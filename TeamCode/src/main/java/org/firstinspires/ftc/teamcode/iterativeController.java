@@ -20,7 +20,8 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    // These variables are used to store the speed at which a given motor runs.
+    // These variables are used to store the speed at which a given motor (or in the case of
+    // shaftSpeed, a  given 360 degree servo) runs.
 
     double  leftPower      = 0;
     double  rightPower     = 0;
@@ -31,7 +32,7 @@ public class iterativeController extends OpMode {
 
     double  linearPower    = 0;
 
-    double  shaftSpeed     = 128;
+    double  shaftSpeed     = 0;
 
     // These variables are used in "toggles" to determine whether a given button is pressed.
 
@@ -45,6 +46,8 @@ public class iterativeController extends OpMode {
 
     boolean halfSpeed      = false;
     int     speedDirection = 1;
+
+    // powerCap determines if the mineral lift "throttling" system is in effect, as described below.
 
     boolean powerCap = false;
 
@@ -208,10 +211,6 @@ public class iterativeController extends OpMode {
 
         collectPower = gamepad2.left_stick_y * -1;
 
-        // It takes much less power to move the linear lift upwards than downwards; we clip the
-        // speed downwards at a quarter to prevent the lift from "slamming" downwards.
-
-
 
         // Cap the power at .5 if the power is greater than .5 for 1 second.
 
@@ -223,6 +222,9 @@ public class iterativeController extends OpMode {
             powerCap = !powerCap;
             runtime.reset();
         }
+
+        // It takes much less power to move the linear lift upwards than downwards; we clip the
+        // speed downwards at a quarter to prevent the lift from "slamming" downwards.
 
         if(powerCap){
             collectPower = Range.clip(collectPower, -.5, .5);
