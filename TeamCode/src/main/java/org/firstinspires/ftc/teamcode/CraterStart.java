@@ -40,7 +40,7 @@ public class CraterStart extends AutonomousStart {
 
         dismount();
 
-        flashSet(true);
+        flashSet(false);
 
         if(seeingGold() == true) {
 

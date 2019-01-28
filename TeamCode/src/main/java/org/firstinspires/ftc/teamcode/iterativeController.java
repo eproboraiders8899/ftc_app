@@ -214,11 +214,13 @@ public class iterativeController extends OpMode {
 
         // Cap the power at .5 if the power is greater than .5 for 1 second.
 
-        if(collectPower <= .5 && !powerCap){
-            runtime.reset();
+        if(collectPower <= .5 || collectPower >= -.3){
+            if(!powerCap) {
+                runtime.reset();
+            }
         }
 
-        if(runtime.seconds() >= 1){
+        if(runtime.seconds() >= 2){
             powerCap = !powerCap;
             runtime.reset();
         }
@@ -227,7 +229,7 @@ public class iterativeController extends OpMode {
         // speed downwards at a quarter to prevent the lift from "slamming" downwards.
 
         if(powerCap){
-            collectPower = Range.clip(collectPower, -.5, .5);
+            collectPower = Range.clip(collectPower, -.3, .5);
         }
         else {
             collectPower = Range.clip(collectPower, -.5, 1.0);
@@ -245,10 +247,10 @@ public class iterativeController extends OpMode {
             shaftSpeed = 0;
         }
         else if(gamepad2.left_trigger >= .3){
-            shaftSpeed = -.7;
+            shaftSpeed = -1;
         }
         else if(gamepad2.right_trigger >= .3){
-            shaftSpeed = .7;
+            shaftSpeed = 1;
         }
         else{
             shaftSpeed = 0;

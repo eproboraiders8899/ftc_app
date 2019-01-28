@@ -49,9 +49,9 @@ public class BaseStart extends AutonomousStart {
 
             encoderDrive(1, 40, 40, 3);
 
-            encoderDrive(.75, 9, -9, 3);
+            encoderDrive(.75, 12, -12, 3);
 
-            encoderDrive(.75, 30, 30, 3);
+            encoderDrive(.75, 35, 35, 3);
         }
         else {
 
@@ -59,9 +59,7 @@ public class BaseStart extends AutonomousStart {
 
             if(seeingGold() == true) {
 
-            flashSet(false);
-
-                encoderDrive(DRIVE_SPEED,  -3,  3, 3.0);
+                flashSet(false);
 
                 encoderDrive(.75, 80, 80, 3);
             }
@@ -69,7 +67,7 @@ public class BaseStart extends AutonomousStart {
 
                 flashSet(false);
 
-                encoderDrive(DRIVE_SPEED,  2.5,  -2.5, 3.0);
+                encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
 
                 encoderDrive(1, 35, 35, 3);
 
