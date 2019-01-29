@@ -40,48 +40,49 @@ public class CraterStart extends AutonomousStart {
 
         dismount();
 
+        encoderDrive(DRIVE_SPEED, 2, -2, 3.0);
+
         flashSet(false);
 
-        if(seeingGold() == true) {
+        if (seeingGold() == true) {
 
             flashSet(false);
 
-            encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
+            encoderDrive(DRIVE_SPEED, -2, 2, 3.0);
 
             encoderDrive(-1, 35, 35, 3);
 
         }
         else {
+            encoderDrive(DRIVE_SPEED, 8, -8, 3.0);
+            sleep(2000);
 
-            encoderDrive(DRIVE_SPEED,  4,  -4, 3.0);
-
-            if(seeingGold() == true) {
-
-                flashSet(false);
-
-                encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
-
-                encoderDrive(-1, 27, 27, 3);
-
-            }
-            else{
-
-                flashSet(false);
-
-                encoderDrive(DRIVE_SPEED,  2.5,  -2.5, 3.0);
-
-                encoderDrive(-1, 35, 35, 3);
-
-
-            }
         }
-
-
-
-
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-
     }
 }
+
+
+
+
+/*
+        telemetry.addData("Path","Complete");
+        telemetry.update();
+
+        }
+
+}
+        if(seeingGold() == true) {
+
+        flashSet(false);
+
+        encoderDrive(-1, 27, 27, 3);
+
+        }
+        else{
+
+        flashSet(false);
+
+        encoderDrive(DRIVE_SPEED,  3,  -3, 3.0);
+
+        encoderDrive(-1, 35, 35, 3);
+*/
