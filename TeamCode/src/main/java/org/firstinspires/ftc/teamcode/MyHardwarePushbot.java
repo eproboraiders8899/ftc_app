@@ -95,6 +95,10 @@ public class MyHardwarePushbot
 
     public Servo          boxServo     = null;
 
+    // linearLocker locks the linear lift angle to straight up to be able to extend said lift.
+
+    public Servo          linearLocker   = null;
+
     // shaftServo is the (360 degree) servo that rotates the shaft inside of the box used for
     // mineral collection.
 
@@ -158,6 +162,7 @@ public class MyHardwarePushbot
         markerHolder  = hwMap.get(Servo.class, "marker_holder");
         limitServo = hwMap.get(Servo.class, "limit_servo");
         boxServo = hwMap.get(Servo.class, "box_servo");
+        linearLocker = hwMap.get(Servo.class, "linear_locker");
         shaftServo = hwMap.get(CRServo.class, "shaft_servo");
     }
  }

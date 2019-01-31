@@ -47,7 +47,7 @@ public class iterativeController extends OpMode {
     boolean halfSpeed      = false;
     int     speedDirection = 1;
 
-    // powerCap determines if the mineral lift "throttling" system is in effect, as described below.
+    // powerCap determines if the mineral lift "thrliottling" system is in effect, as described below.
 
     boolean powerCap = false;
 

@@ -7,6 +7,29 @@ public class DepreciatedCode {
 
     // telemetry.addData("Status", "Run Time: " + runtime.toString());
 
+/*
+        telemetry.addData("Path","Complete");
+        telemetry.update();
+
+        }
+
+}
+        if(seeingGold() == true) {
+
+        flashSet(false);
+
+        encoderDrive(-1, 27, 27, 3);
+
+        }
+        else{
+
+        flashSet(false);
+
+        encoderDrive(DRIVE_SPEED,  3,  -3, 3.0);
+
+        encoderDrive(-1, 35, 35, 3);
+*/
+
     // static final double COUNTS_PER_MOTOR_REV  = 1440;
     // static final double DRIVE_GEAR_REDUCTION  = 2.0;
     // static final double WHEEL_DIAMETER_INCHES = 4.0;

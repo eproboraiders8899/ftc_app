@@ -92,7 +92,10 @@ public class AutonomousStart extends LinearOpMode {
         robot.landerLift.setPower(0);
     }
 
-    // TODO: Remove this function and replace the single instance of it with our new turn function.
+    // turn is an old version of encoderDrive that simply moves both drive motors at opposite
+    // speeds for a given amount of time.
+
+    // It is used once during dismount.
 
     public void turn(double speed, double duration) {
 
@@ -120,6 +123,9 @@ public class AutonomousStart extends LinearOpMode {
 
     // It moves the "left" motor (leftInches) units and the "right" motor (rightInches) units
     // at a speed of (speed), being sure to shut off the function after (timeoutS) seconds.
+
+    // When leftInches is negative and rightInches is positive, the robot turns clockwise.
+    // When leftInches is positive and rightInches is negative, the robot turns counterclockwise.
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
@@ -246,7 +252,11 @@ public class AutonomousStart extends LinearOpMode {
         // Editing code past this point affects Base and CraterStart drastically.
         // Technically, the robot is "dismounted" before this.
 
+        // Turn clockwise slightly to "un-hook" from the lander.
+
         turn(-.30, 1);
+
+        // Drive forward slightly to avoid being "re-hooked" onto the lander.
 
         encoderDrive(.35,2,2,2);
     }
