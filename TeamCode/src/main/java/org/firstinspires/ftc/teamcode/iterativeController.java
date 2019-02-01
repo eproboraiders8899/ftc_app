@@ -42,12 +42,19 @@ public class iterativeController extends OpMode {
     boolean aPressed       = false;
     boolean bPressed       = false;
 
+    boolean yPressed       = false;
+
+    // linearLock determines if the servo linearLocker is "locking" the angle of the linear
+    // lift to be straight up.
+
+    boolean linearLock     = false;
+
     // These variables determine whether half or reverse speed is on.
 
     boolean halfSpeed      = false;
     int     speedDirection = 1;
 
-    // powerCap determines if the mineral lift "thrliottling" system is in effect, as described below.
+    // powerCap determines if the mineral lift "throttling" system is in effect, as described below.
 
     boolean powerCap = false;
 
@@ -60,6 +67,8 @@ public class iterativeController extends OpMode {
     // These variables are used to determine the position at which a servo should be at.
 
     double boxPosition;
+
+    double lockPosition;
 
     // These variables, as explained later, are used only in telemetry.
 
@@ -149,6 +158,17 @@ public class iterativeController extends OpMode {
 
         if(gamepad1.b == false) {
             bPressed = false;
+        }
+
+        // Toggle linearLock with the Y button on the second controller.
+
+        if(gamepad2.y == true && yPressed == false){
+            linearLock = !linearLock;
+            yPressed = true;
+        }
+
+        if(gamepad2.y == false) {
+            yPressed = false;
         }
 
         //------------------------------------------------------------------------------------------
@@ -270,6 +290,16 @@ public class iterativeController extends OpMode {
 
         boxPosition = Range.clip(boxPosition, 0, 1);
 
+        // linearLock determines if the servo linearLocker is in position to lock the mineral
+        // lift upright; update the position of the servo accordingly.
+
+        if(linearLock) {
+            lockPosition = .2;
+        }
+        else{
+            lockPosition = -.7;
+        }
+
         //------------------------------------------------------------------------------------------
         // 3. MOVEMENT
         //------------------------------------------------------------------------------------------
@@ -316,6 +346,10 @@ public class iterativeController extends OpMode {
         robot.shaftServo.setPower(shaftSpeed);
 
         robot.boxServo.setPosition(boxPosition);
+
+        // Set the position of linearLocker based on lockPosition.
+
+        robot.linearLocker.setPosition(lockPosition);
 
         //------------------------------------------------------------------------------------------
         // 4. TELEMETRY

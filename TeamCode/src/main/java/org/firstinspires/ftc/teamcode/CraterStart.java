@@ -102,6 +102,9 @@ public class CraterStart extends AutonomousStart {
 
             if (seeingGold() == true) {
 
+                // Turn clockwise to align the robot back with the leftmost mineral to push it out
+                // of position.
+
                 encoderDrive(DRIVE_SPEED, -2, 2, 3.0);
 
                 // Drive forward and park on the edge of the crater.
