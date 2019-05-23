@@ -82,6 +82,9 @@ public class MyHardwarePushbot
     // markerHolder is the servo that holds our team's marker; it moves downwards when our robot
     // is in the base and ready to deposit said marker.
 
+    public DcMotor        leftRotator  = null;
+    public DcMotor        rightRotator = null;
+
     public Servo          markerHolder = null;
 
     // limitServo is the servo that moves the limit switch on our robot out of the way when
@@ -133,6 +136,8 @@ public class MyHardwarePushbot
         landerLift  = hwMap.get(DcMotor.class, "lander_lift");
         linearTurn  = hwMap.get(DcMotor.class, "linear_turn");
         linearLift  = hwMap.get(DcMotor.class, "linear_lift");
+        leftRotator = hwMap.get(DcMotor.class, "left_rotator");
+        rightRotator  = hwMap.get(DcMotor.class, "right_rotator");
 
         limitButton = hwMap.get(DigitalChannel.class, "limit_button");
         limitButton.setMode(DigitalChannel.Mode.INPUT);
@@ -148,6 +153,8 @@ public class MyHardwarePushbot
         landerLift.setPower(0);
         linearTurn.setPower(0);
         linearLift.setPower(0);
+        leftRotator.setPower(0);
+        rightRotator.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

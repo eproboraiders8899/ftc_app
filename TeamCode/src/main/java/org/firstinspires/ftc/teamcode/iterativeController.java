@@ -66,7 +66,7 @@ public class iterativeController extends OpMode {
 
     // These variables are used to determine the position at which a servo should be at.
 
-    double boxPosition;
+    double boxPosition = .5;
 
     double lockPosition;
 
@@ -280,15 +280,13 @@ public class iterativeController extends OpMode {
         // is pressed; move it backwards if the left bumper is pressed. Clip the position within
         // 0 and 1 to avoid giving the servo an invalid position.
 
-        if(gamepad2.left_bumper && gamepad2.right_bumper) {}
-        else if(gamepad2.left_bumper){
+        if(gamepad2.left_bumper) {
             boxPosition = 0;
         }
-        else if(gamepad2.right_bumper){
+        else if(gamepad2.right_bumper) {
             boxPosition = 1;
         }
 
-        boxPosition = Range.clip(boxPosition, 0, 1);
 
         // linearLock determines if the servo linearLocker is in position to lock the mineral
         // lift upright; update the position of the servo accordingly.
