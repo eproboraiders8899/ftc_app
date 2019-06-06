@@ -20,19 +20,17 @@ public class iterativeController extends OpMode {
 
     MyHardwarePushbot robot = new MyHardwarePushbot();
 
-    // These variables are used to store the speed at which a given motor (or in the case of
-    // shaftSpeed, a  given 360 degree servo) runs.
+    // These variables are used to store the speed at which a given motor (or CR Servo) runs.
 
     double  leftPower      = 0;
     double  rightPower     = 0;
 
     double  liftPower      = .5;
 
-    double  collectPower   = 0;
+    double  linearSpeed    = 0;
+    double  rotatorSpeed   = 0;
 
-    double  linearPower    = 0;
-
-    double  shaftSpeed     = 0;
+    double  intakeSpeed    = 0;
 
     // These variables are used in "toggles" to determine whether a given button is pressed.
 
@@ -42,21 +40,10 @@ public class iterativeController extends OpMode {
     boolean aPressed       = false;
     boolean bPressed       = false;
 
-    boolean yPressed       = false;
-
-    // linearLock determines if the servo linearLocker is "locking" the angle of the linear
-    // lift to be straight up.
-
-    boolean linearLock     = false;
-
     // These variables determine whether half or reverse speed is on.
 
     boolean halfSpeed      = false;
     int     speedDirection = 1;
-
-    // powerCap determines if the mineral lift "throttling" system is in effect, as described below.
-
-    boolean powerCap = false;
 
     // These variables are used when half speed mode is on as "half" of the original speed that
     // the motor was supposed to run.
@@ -66,9 +53,7 @@ public class iterativeController extends OpMode {
 
     // These variables are used to determine the position at which a servo should be at.
 
-    double boxPosition = .5;
-
-    double lockPosition;
+    double boxPosition;
 
     // These variables, as explained later, are used only in telemetry.
 
@@ -160,17 +145,6 @@ public class iterativeController extends OpMode {
             bPressed = false;
         }
 
-        // Toggle linearLock with the Y button on the second controller.
-
-        if(gamepad2.y == true && yPressed == false){
-            linearLock = !linearLock;
-            yPressed = true;
-        }
-
-        if(gamepad2.y == false) {
-            yPressed = false;
-        }
-
         //------------------------------------------------------------------------------------------
         // 2. POWER
         //------------------------------------------------------------------------------------------
@@ -226,77 +200,33 @@ public class iterativeController extends OpMode {
 
         liftPower = Range.clip(liftPower, -1.0, 1.0);
 
-        // Set the speed of the motor controlling the angle of the (mineral) linear lift
-        // to the "y" coordinate of the right stick on the 2nd controller.
-
-        collectPower = gamepad2.left_stick_y * -1;
-
-
-        // Cap the power at .5 if the power is greater than .5 for 1 second.
-
-        if(collectPower <= .5 || collectPower >= -.3){
-            if(!powerCap) {
-                runtime.reset();
-            }
-        }
-
-        if(runtime.seconds() >= 2){
-            powerCap = !powerCap;
-            runtime.reset();
-        }
-
-        // It takes much less power to move the linear lift upwards than downwards; we clip the
-        // speed downwards at a quarter to prevent the lift from "slamming" downwards.
-
-        if(powerCap){
-            collectPower = Range.clip(collectPower, -.3, .5);
-        }
-        else {
-            collectPower = Range.clip(collectPower, -.5, 1.0);
-        }
-
-        // Set linearPower to the y coordinate of the right stick on the 2nd controller.
-
-        linearPower = gamepad2.right_stick_y;
-
-        // If the left trigger on the 2nd controller is pressed, push minerals out of the mineral
-        // collector; if the right trigger is pressed, suck minerals in. Otherwise, don't
-        // rotate the 360 degree servo.
-
-        if(gamepad2.left_trigger >= .3 && gamepad2. right_trigger >= .3) {
-            shaftSpeed = 0;
-        }
+        if(gamepad2.left_trigger >= .3 && gamepad2.right_trigger >= .3) {}
         else if(gamepad2.left_trigger >= .3){
-            shaftSpeed = -1;
+            boxPosition = -1;
         }
         else if(gamepad2.right_trigger >= .3){
-            shaftSpeed = 1;
-        }
-        else{
-            shaftSpeed = 0;
-        }
-
-        // Move the mineral collector box servo forward if the right bumper on the 2nd controller
-        // is pressed; move it backwards if the left bumper is pressed. Clip the position within
-        // 0 and 1 to avoid giving the servo an invalid position.
-
-        if(gamepad2.left_bumper) {
-            boxPosition = 0;
-        }
-        else if(gamepad2.right_bumper) {
             boxPosition = 1;
         }
 
+        // Subject to change because of the looming threat of GRAVITY.
 
-        // linearLock determines if the servo linearLocker is in position to lock the mineral
-        // lift upright; update the position of the servo accordingly.
+        rotatorSpeed = gamepad2.left_stick_y;
 
-        if(linearLock) {
-            lockPosition = .2;
+        linearSpeed  = gamepad2.right_stick_y;
+
+        if(gamepad2.left_bumper == true && gamepad2.right_bumper == true) {
+            intakeSpeed = 0;
         }
-        else{
-            lockPosition = -.7;
+        else if(gamepad2.left_bumper == true) {
+            intakeSpeed = -.5;
         }
+        else if(gamepad2.right_bumper == true) {
+            intakeSpeed = .5;
+        }
+        else {
+            intakeSpeed = 0;
+        }
+
 
         //------------------------------------------------------------------------------------------
         // 3. MOVEMENT
@@ -333,21 +263,14 @@ public class iterativeController extends OpMode {
             robot.landerLift.setPower(0);
         }
 
-        robot.linearTurn.setPower(collectPower);
+        robot.boxLeft.setPower(intakeSpeed);
+        robot.boxRight.setPower(-intakeSpeed);
 
-        // left and rightLinear run in opposite directions since they wind and unwind a string.
+        robot.linearRotator.setPower(rotatorSpeed);
 
-        robot.linearLift.setPower(linearPower);
+        robot.boxRotator.setPosition(boxPosition);
 
-        // Set the positions of the shaft and boxServos to their corresponding positions.
-
-        robot.shaftServo.setPower(shaftSpeed);
-
-        robot.boxServo.setPosition(boxPosition);
-
-        // Set the position of linearLocker based on lockPosition.
-
-        robot.linearLocker.setPosition(lockPosition);
+        robot.linearLift.setPower(linearSpeed);
 
         //------------------------------------------------------------------------------------------
         // 4. TELEMETRY

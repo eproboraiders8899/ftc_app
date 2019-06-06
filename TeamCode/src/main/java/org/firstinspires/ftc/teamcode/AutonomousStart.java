@@ -245,8 +245,6 @@ public class AutonomousStart extends LinearOpMode {
 
         moveLift(1, 0.1);
 
-        robot.limitServo.setPosition(1);
-
         // Drive away *slightly* from the lander.
 
         // Editing code past this point affects Base and CraterStart drastically.

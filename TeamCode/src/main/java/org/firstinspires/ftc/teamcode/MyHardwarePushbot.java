@@ -57,60 +57,36 @@ public class MyHardwarePushbot
 
     // "leftDrive" is the motor controlling the wheels on the left side of our robot.
 
-    public DcMotor        leftDrive    = null;
+    public DcMotor        leftDrive     = null;
 
     // "rightDrive" is the motor controlling the wheels on the right side of our robot.
 
-    public DcMotor        rightDrive   = null;
+    public DcMotor        rightDrive    = null;
 
     // landerLift is the motor controlling the lift on our robot used
     // to hook onto (and off of) the lander in the center of the playing field.
 
-    public DcMotor        landerLift   = null;
-
-    // linearTurn is the motor used to control the angle that the linearTurn is above the ground.
-    // Note that linearTurn is a motor because a servo wasn't strong enough to lift our linear
-    // lift off of the ground.
-
-    public DcMotor        linearTurn   = null;
-
-    // linearLift works to raise and lower the linear lift; one simply
-    // moves in the opposite direction of the other.
-
-    public DcMotor        linearLift   = null;
+    public DcMotor        landerLift    = null;
 
     // markerHolder is the servo that holds our team's marker; it moves downwards when our robot
     // is in the base and ready to deposit said marker.
 
-    public DcMotor        leftRotator  = null;
-    public DcMotor        rightRotator = null;
-
-    public Servo          markerHolder = null;
-
-    // limitServo is the servo that moves the limit switch on our robot out of the way when
-    // the switch is pressed (or in our case, the robot hits the ground after dismounting
-    // from the lander).
-
-    public Servo          limitServo   = null;
-
-    // boxServo is the servo that rotates the box (and the shaft within) used for
-    // mineral collection.
-
-    public Servo          boxServo     = null;
-
-    // linearLocker locks the linear lift angle to straight up to be able to extend said lift.
-
-    public Servo          linearLocker   = null;
-
-    // shaftServo is the (360 degree) servo that rotates the shaft inside of the box used for
-    // mineral collection.
-
-    public CRServo        shaftServo   = null;
+    public Servo          markerHolder  = null;
 
     // limitButton is the digital sensor that detects when the robot has touched the ground
     // after dismounting fom the lander; the button is pressed when this happens.
 
-    public DigitalChannel limitButton        = null;
+    public DcMotor        linearRotator = null;
+
+    public Servo          boxRotator    = null;
+
+    public CRServo        linearLift    = null;
+
+    public CRServo        boxLeft      = null;
+
+    public CRServo        boxRight       = null;
+
+    public DigitalChannel limitButton   = null;
 
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -131,45 +107,37 @@ public class MyHardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive   = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive  = hwMap.get(DcMotor.class, "right_drive");
-        landerLift  = hwMap.get(DcMotor.class, "lander_lift");
-        linearTurn  = hwMap.get(DcMotor.class, "linear_turn");
-        linearLift  = hwMap.get(DcMotor.class, "linear_lift");
-        leftRotator = hwMap.get(DcMotor.class, "left_rotator");
-        rightRotator  = hwMap.get(DcMotor.class, "right_rotator");
+        leftDrive     = hwMap.get(DcMotor.class, "left_drive");
+        rightDrive    = hwMap.get(DcMotor.class, "right_drive");
+        landerLift    = hwMap.get(DcMotor.class, "lander_lift");
+        linearRotator = hwMap.get(DcMotor.class, "linear_rotator");
 
         limitButton = hwMap.get(DigitalChannel.class, "limit_button");
         limitButton.setMode(DigitalChannel.Mode.INPUT);
 
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        linearTurn.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
 
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         landerLift.setPower(0);
-        linearTurn.setPower(0);
-        linearLift.setPower(0);
-        leftRotator.setPower(0);
-        rightRotator.setPower(0);
+        linearRotator.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
 
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearTurn.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        linearLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
 
         markerHolder  = hwMap.get(Servo.class, "marker_holder");
-        limitServo = hwMap.get(Servo.class, "limit_servo");
-        boxServo = hwMap.get(Servo.class, "box_servo");
-        linearLocker = hwMap.get(Servo.class, "linear_locker");
-        shaftServo = hwMap.get(CRServo.class, "shaft_servo");
+        boxRotator = hwMap.get(Servo.class, "box_rotator");
+        linearLift = hwMap.get(CRServo.class, "linear_lift");
+        boxLeft = hwMap.get(CRServo.class, "box_left");
+        boxRight = hwMap.get(CRServo.class, "box_right");
+
     }
  }
