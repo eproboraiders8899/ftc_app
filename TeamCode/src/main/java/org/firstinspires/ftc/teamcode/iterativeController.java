@@ -218,10 +218,10 @@ public class iterativeController extends OpMode {
             intakeSpeed = 0;
         }
         else if(gamepad2.left_bumper == true) {
-            intakeSpeed = -.5;
+            intakeSpeed = 1;
         }
         else if(gamepad2.right_bumper == true) {
-            intakeSpeed = .5;
+            intakeSpeed = -1;
         }
         else {
             intakeSpeed = 0;
@@ -264,7 +264,13 @@ public class iterativeController extends OpMode {
         }
 
         robot.boxLeft.setPower(intakeSpeed);
-        robot.boxRight.setPower(-intakeSpeed);
+
+        if(intakeSpeed == 0) {
+            robot.boxRight.setPower(-.4);
+        }
+        else {
+            robot.boxRight.setPower(intakeSpeed);
+        }
 
         robot.linearRotator.setPower(rotatorSpeed);
 
