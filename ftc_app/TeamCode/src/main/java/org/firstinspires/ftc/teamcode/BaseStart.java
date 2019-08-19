@@ -95,7 +95,7 @@ public class BaseStart extends AutonomousStart {
 
             // Turn counterclockwise to align the camera with the middlemost mineral.
 
-            encoderDrive(DRIVE_SPEED,  5,  -5, 3.0);
+            encoderDrive(DRIVE_SPEED,  6,  -6, 3.0);
 
             // Is the middlemost mineral gold?
 
@@ -110,7 +110,7 @@ public class BaseStart extends AutonomousStart {
                 // Turn clockwise to align the robot back with the middlemost
                 // mineral to push it out of position.
 
-                encoderDrive(DRIVE_SPEED,  -1,  1, 3.0);
+                encoderDrive(DRIVE_SPEED,  -2,  2, 3.0);
 
                 // Drive forward into the base.
 
@@ -130,7 +130,7 @@ public class BaseStart extends AutonomousStart {
                 // Turn counterclockwise to align the robot with the leftmost
                 // mineral to push it out of position.
 
-                encoderDrive(DRIVE_SPEED,  3,  -3, 3.0);
+                encoderDrive(DRIVE_SPEED,  2,  -2, 3.0);
 
                 // Drive forward.
 

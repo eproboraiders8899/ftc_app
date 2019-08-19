@@ -40,10 +40,9 @@ public class iterativeController extends OpMode {
     boolean aPressed       = false;
     boolean bPressed       = false;
 
-    // These variables determine whether half or reverse speed is on.
+    // These variables determine whether half speed is on.
 
     boolean halfSpeed      = false;
-    int     speedDirection = 1;
 
     // These variables are used when half speed mode is on as "half" of the original speed that
     // the motor was supposed to run.
@@ -123,17 +122,6 @@ public class iterativeController extends OpMode {
         // when the button is pressed down, but updates at the same time that the original
         // variable does.
 
-        // Toggle "reverse speed" mode with the A button on the first controller.
-
-        if(gamepad1.a == true && aPressed == false){
-            speedDirection = speedDirection * -1;
-            aPressed = true;
-        }
-
-        if(gamepad1.a == false) {
-            aPressed = false;
-        }
-
         // Toggle "half speed" mode with the B button on the first controller.
 
         if(gamepad1.b == true && bPressed == false){
@@ -166,6 +154,7 @@ public class iterativeController extends OpMode {
         else {
             rightPower = gamepad1.right_stick_y;
         }
+
 
         // Changing the speed of the lander lift on the robot works similarly to toggling
         // a variable, with a number incrementing instead of a boolean changing.
@@ -243,9 +232,9 @@ public class iterativeController extends OpMode {
             robot.leftDrive.setPower(leftHalf);
             robot.rightDrive.setPower(rightHalf);
         }
-        else{
-            robot.leftDrive.setPower(leftPower * speedDirection);
-            robot.rightDrive.setPower(rightPower * speedDirection);
+        else {
+            robot.leftDrive.setPower(leftPower);
+            robot.rightDrive.setPower(rightPower);
         }
 
         // If the up "arrow" button on the first controller, move the lander lift up at the
