@@ -78,7 +78,7 @@ public class CraterStart extends AutonomousStart {
             // Turns like these are only necessary because the phone's camera is not in the center
             // of the robot.
 
-            encoderDrive(DRIVE_SPEED, -2, 2, 3.0);
+            encoderDrive(DRIVE_SPEED, -3.5, 3.5, 3.0);
 
             // Drive forward and park on the edge of the crater.
 
@@ -119,7 +119,7 @@ public class CraterStart extends AutonomousStart {
                 // Turn clockwise to align the robot with the middlemost
                 // mineral to push it out of position.
 
-                encoderDrive(DRIVE_SPEED, -7.5, 7.5, 3.0);
+                encoderDrive(DRIVE_SPEED, -8.5, 8.5, 3.0);
 
                 // Drive forward and park on the edge of the crater.
 
